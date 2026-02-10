@@ -77,26 +77,27 @@ export class FileSystemManager {
     const node = this.allNodes.get(nodeId)
     if (!node || !node.parent) return false
 
-    const path = this.getPathFromRoot(node.parent)
-    let subtree: AnswerTree | null = answer
-
-    for (const segment of path) {
-      if (subtree === null || !(segment in subtree)) return false
-      subtree = subtree[segment] as AnswerTree
-    }
-
-    if (subtree === null) return false
-    if (node.type === 'file') return node.name in subtree && subtree[node.name] === null
-    return node.name in subtree && subtree[node.name] !== null
+    const parentName = node.parent === this.root ? null : node.parent.name
+    const ancestors = this.getAnswerAncestors(node.name, node.type, answer, [null])
+    return ancestors.includes(parentName)
   }
 
-  private getPathFromRoot(node: FSNode): string[] {
-    const path: string[] = []
-    let current: FSNode | null = node
-    while (current && current !== this.root) {
-      path.unshift(current.name)
-      current = current.parent
+  private getAnswerAncestors(
+    name: string,
+    type: 'file' | 'folder',
+    tree: AnswerTree,
+    path: (string | null)[],
+  ): (string | null)[] {
+    for (const [key, value] of Object.entries(tree)) {
+      if (key === name) {
+        const isMatch = type === 'file' ? value === null : value !== null
+        if (isMatch) return path
+      }
+      if (value !== null) {
+        const result = this.getAnswerAncestors(name, type, value, [...path, key])
+        if (result.length > 0) return result
+      }
     }
-    return path
+    return []
   }
 }

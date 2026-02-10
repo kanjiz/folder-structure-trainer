@@ -3,8 +3,16 @@ import { FileSystemManager } from '../models/FileSystemManager'
 import { renderTreeView, updateTreeView } from './TreeView'
 import { createIconView, destroyIconView } from './IconView'
 
+/** 現在のゲームセッションで使用中のFileSystemManagerインスタンス */
 let manager: FileSystemManager | null = null
 
+/**
+ * ゲーム画面をレンダリングします
+ * @param container - レンダリング先のコンテナ要素
+ * @param question - 表示する問題データ
+ * @param onComplete - 答え合わせ完了時のコールバック
+ * @param onBack - 戻るボタンクリック時のコールバック
+ */
 export function renderGameView(
   container: HTMLElement,
   question: Question,
@@ -65,11 +73,18 @@ export function renderGameView(
   wrapper.querySelector('#back-btn')!.addEventListener('click', onBack)
 }
 
+/**
+ * ゲーム画面を破棄し、リソースをクリーンアップします
+ */
 export function destroyGameView(): void {
   destroyIconView()
   manager = null
 }
 
+/**
+ * 現在のFileSystemManagerインスタンスを取得します
+ * @returns 現在のmanagerインスタンス、またはnull
+ */
 export function getManager(): FileSystemManager | null {
   return manager
 }

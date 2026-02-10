@@ -3,20 +3,40 @@ import type { FileSystemManager } from '../models/FileSystemManager'
 import type { FSNode } from '../models/FileSystem'
 import type { Question } from '../models/FileSystem'
 
+/** 現在のp5インスタンス */
 let p5Instance: p5 | null = null
 
+/** アイコンの幅（ピクセル） */
 const ICON_W = 100
+/** アイコンの高さ（ピクセル） */
 const ICON_H = 100
+/** アイコン間の隙間（ピクセル） */
 const ICON_GAP = 16
+/** コンテナ内のパディング（ピクセル） */
 const PADDING = 24
+/** ナビゲーションバーの高さ（ピクセル） */
 const NAV_BAR_H = 40
 
+/**
+ * アイコンビューに表示されるアイテムの情報
+ */
 interface IconItem {
+  /** 対応するファイルシステムノード */
   node: FSNode
+  /** x座標（ピクセル） */
   x: number
+  /** y座標（ピクセル） */
   y: number
 }
 
+/**
+ * p5.jsを使用したアイコンビューを作成します
+ * ドラッグ＆ドロップ、ダブルクリックによるフォルダ移動をサポートします
+ * @param container - レンダリング先のコンテナ要素
+ * @param manager - ファイルシステムマネージャー
+ * @param question - 問題データ
+ * @param onMove - ノード移動時のコールバック
+ */
 export function createIconView(
   container: HTMLElement,
   manager: FileSystemManager,
@@ -218,6 +238,9 @@ export function createIconView(
   container.appendChild(navBtn)
 }
 
+/**
+ * アイコンビューを破棄し、p5インスタンスをクリーンアップします
+ */
 export function destroyIconView(): void {
   if (p5Instance) {
     p5Instance.remove()
@@ -225,6 +248,12 @@ export function destroyIconView(): void {
   }
 }
 
+/**
+ * ナビゲーションバーを描画します（現在のパスを表示）
+ * @param p - p5インスタンス
+ * @param currentFolder - 現在表示中のフォルダ
+ * @param manager - ファイルシステムマネージャー
+ */
 function drawNavBar(p: p5, currentFolder: FSNode, manager: FileSystemManager): void {
   p.fill(240)
   p.noStroke()
@@ -242,6 +271,12 @@ function drawNavBar(p: p5, currentFolder: FSNode, manager: FileSystemManager): v
   p.textSize(12)
 }
 
+/**
+ * ノードからルートまでのパス文字列を生成します
+ * @param node - パスを取得するノード
+ * @param manager - ファイルシステムマネージャー
+ * @returns "Desktop > フォルダ名 > ..." 形式のパス文字列
+ */
 function getPath(node: FSNode, manager: FileSystemManager): string {
   const parts: string[] = []
   let current: FSNode | null = node
@@ -253,6 +288,12 @@ function getPath(node: FSNode, manager: FileSystemManager): string {
   return parts.join(' > ')
 }
 
+/**
+ * アイコンを描画します（フィードバック表示を含む）
+ * @param p - p5インスタンス
+ * @param icon - 描画するアイコンアイテム
+ * @param feedback - フィードバック情報（正解/不正解のアニメーション用）
+ */
 function drawIcon(
   p: p5,
   icon: IconItem,
@@ -274,6 +315,14 @@ function drawIcon(
   drawIconShape(p, icon.node, icon.x, icon.y, alpha)
 }
 
+/**
+ * アイコンの形状（フォルダまたはファイル）を描画します
+ * @param p - p5インスタンス
+ * @param node - 描画するノード
+ * @param x - x座標
+ * @param y - y座標
+ * @param alpha - 透明度（0-255）
+ */
 function drawIconShape(p: p5, node: FSNode, x: number, y: number, alpha: number): void {
   p.push()
   if (node.type === 'folder') {

@@ -1,5 +1,9 @@
 import type { Question } from '../models/FileSystem'
 
+/**
+ * フォルダ構造トレーニングの問題データ配列
+ * 練習モード（practice）と演習モード（exercise）の問題が含まれます
+ */
 export const questions: Question[] = [
   {
     id: 'q001',

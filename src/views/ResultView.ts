@@ -1,5 +1,13 @@
 import type { Question } from '../models/FileSystem'
 
+/**
+ * 結果画面をレンダリングします
+ * @param container - レンダリング先のコンテナ要素
+ * @param question - 実施した問題データ
+ * @param result - 答え合わせの結果（正解・不正解のIDリスト）
+ * @param onBackToSelect - 問題選択に戻るボタンのコールバック
+ * @param onRetry - もう一度ボタンのコールバック
+ */
 export function renderResultView(
   container: HTMLElement,
   question: Question,

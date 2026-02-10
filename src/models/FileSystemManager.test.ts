@@ -89,6 +89,36 @@ describe('FileSystemManager', () => {
     expect(isCorrect).toBe(true)
   })
 
+  it('should accept file into correct parent even if parent is not yet in final position', () => {
+    // Bug: 会議がまだルート直下にある状態で議事録を会議に入れる
+    // 正解は 仕事 > 会議 > 議事録.txt だが、
+    // 「議事録の親は会議」という関係は正しいので許可すべき
+    manager.moveNode('d2', 'f2')  // 議事録 → 会議（会議はまだルート直下）
+    const isCorrect = manager.checkSingleMove('d2', sampleQuestion.answer)
+    expect(isCorrect).toBe(true)
+  })
+
+  it('should accept file into ancestor folder on correct path', () => {
+    // 議事録を仕事に入れる（正解パスは 仕事 > 会議 > 議事録）
+    // 仕事は祖先フォルダなので許可すべき
+    manager.moveNode('d2', 'f1')
+    const isCorrect = manager.checkSingleMove('d2', sampleQuestion.answer)
+    expect(isCorrect).toBe(true)
+  })
+
+  it('should reject file into completely wrong folder', () => {
+    // 議事録をプライベートに入れる（正解パスに無関係）
+    manager.moveNode('d2', 'f3')
+    const isCorrect = manager.checkSingleMove('d2', sampleQuestion.answer)
+    expect(isCorrect).toBe(false)
+  })
+
+  it('should accept folder that is already at correct root position', () => {
+    // 仕事フォルダはルート直下が正解位置。初期状態でルート直下にいる
+    const isCorrect = manager.checkSingleMove('f1', sampleQuestion.answer)
+    expect(isCorrect).toBe(true)
+  })
+
   it('should build current tree correctly', () => {
     manager.moveNode('d1', 'f1')
     manager.moveNode('f2', 'f1')

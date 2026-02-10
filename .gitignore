@@ -12,5 +12,6 @@ npm-debug.log*
 
 .DS_Store
 Thumbs.db
+.serena/
 
 *.tsbuildinfo

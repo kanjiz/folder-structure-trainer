@@ -5,10 +5,9 @@ import type { Question } from '../models/FileSystem'
 
 let p5Instance: p5 | null = null
 
-const ICON_W = 80
-const ICON_H = 80
+const ICON_W = 100
+const ICON_H = 100
 const ICON_GAP = 16
-const COLS = 6
 const PADDING = 24
 const NAV_BAR_H = 40
 
@@ -38,9 +37,14 @@ export function createIconView(
     function layoutIcons(): void {
       icons = []
       const children = currentFolder.children
+
+      // Calculate columns dynamically based on available width
+      const availableWidth = p.width - PADDING * 2
+      const cols = Math.max(1, Math.floor(availableWidth / (ICON_W + ICON_GAP)))
+
       for (let i = 0; i < children.length; i++) {
-        const col = i % COLS
-        const row = Math.floor(i / COLS)
+        const col = i % cols
+        const row = Math.floor(i / cols)
         icons.push({
           node: children[i],
           x: PADDING + col * (ICON_W + ICON_GAP),
@@ -53,7 +57,7 @@ export function createIconView(
       const canvas = p.createCanvas(container.clientWidth, container.clientHeight)
       canvas.parent(container)
       p.textAlign(p.CENTER, p.CENTER)
-      p.textSize(12)
+      p.textSize(16)
       layoutIcons()
     }
 
@@ -299,10 +303,10 @@ function drawIconShape(p: p5, node: FSNode, x: number, y: number, alpha: number)
   // Label
   p.noStroke()
   p.fill(60, 60, 60, alpha)
-  p.textSize(11)
+  p.textSize(16)
   p.textAlign(p.CENTER, p.TOP)
 
-  const label = node.name.length > 10 ? node.name.substring(0, 9) + '\u2026' : node.name
+  const label = node.name.length > 8 ? node.name.substring(0, 7) + '\u2026' : node.name
   p.text(label, x + ICON_W / 2, y + ICON_H - 14)
   p.pop()
 }

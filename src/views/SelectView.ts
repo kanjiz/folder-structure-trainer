@@ -1,5 +1,11 @@
 import type { Question } from '../models/FileSystem'
 
+/**
+ * 問題選択画面をレンダリングします
+ * @param container - レンダリング先のコンテナ要素
+ * @param questions - 表示する問題のリスト
+ * @param onSelect - 問題選択時のコールバック
+ */
 export function renderSelectView(
   container: HTMLElement,
   questions: Question[],

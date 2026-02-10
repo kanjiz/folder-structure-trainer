@@ -21,12 +21,23 @@ const sampleQuestion: Question = {
   ],
   answer: {
     '仕事': {
-      '会議': { '議事録.txt': null },
-      '報告書.docx': null,
+      type: 'folder',
+      children: {
+        '会議': {
+          type: 'folder',
+          children: {
+            '議事録.txt': { type: 'file' }
+          }
+        },
+        '報告書.docx': { type: 'file' }
+      }
     },
     'プライベート': {
-      '猫.jpg': null,
-    },
+      type: 'folder',
+      children: {
+        '猫.jpg': { type: 'file' }
+      }
+    }
   },
 }
 

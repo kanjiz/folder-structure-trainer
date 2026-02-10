@@ -34,10 +34,20 @@ export interface Question {
 }
 
 /**
- * フォルダ構造の正解を表すツリー型
- * キーはアイテム名、値は子要素のツリーまたはnull（ファイルの場合）
+ * フォルダ構造の正解を表すノード型
  */
-export type AnswerTree = { [name: string]: AnswerTree | null }
+export interface AnswerTreeNode {
+  /** アイテムの種類 */
+  type: ItemType
+  /** 子要素（フォルダの場合のみ存在） */
+  children?: AnswerTree
+}
+
+/**
+ * フォルダ構造の正解を表すツリー型
+ * キーはアイテム名、値はノード情報
+ */
+export type AnswerTree = { [name: string]: AnswerTreeNode }
 
 /**
  * ファイルシステムのノードを表すクラス

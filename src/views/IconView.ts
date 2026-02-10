@@ -5,10 +5,9 @@ import type { Question } from '../models/FileSystem'
 
 let p5Instance: p5 | null = null
 
-const ICON_W = 80
-const ICON_H = 80
+const ICON_W = 100
+const ICON_H = 100
 const ICON_GAP = 16
-const COLS = 6
 const PADDING = 24
 const NAV_BAR_H = 40
 
@@ -38,9 +37,14 @@ export function createIconView(
     function layoutIcons(): void {
       icons = []
       const children = currentFolder.children
+
+      // Calculate columns dynamically based on available width
+      const availableWidth = p.width - PADDING * 2
+      const cols = Math.max(1, Math.floor(availableWidth / (ICON_W + ICON_GAP)))
+
       for (let i = 0; i < children.length; i++) {
-        const col = i % COLS
-        const row = Math.floor(i / COLS)
+        const col = i % cols
+        const row = Math.floor(i / cols)
         icons.push({
           node: children[i],
           x: PADDING + col * (ICON_W + ICON_GAP),

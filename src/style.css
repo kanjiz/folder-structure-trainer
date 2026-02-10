@@ -103,6 +103,10 @@ body {
 }
 
 .instructions li {
+  line-height: 1.6;
+}
+
+.instructions li {
   padding-left: 1em;
   text-indent: -1em;
 }

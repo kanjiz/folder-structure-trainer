@@ -24,12 +24,23 @@ export const questions: Question[] = [
     ],
     answer: {
       '仕事': {
-        '会議': { '議事録.txt': null },
-        '報告書.docx': null,
+        type: 'folder',
+        children: {
+          '会議': {
+            type: 'folder',
+            children: {
+              '議事録.txt': { type: 'file' }
+            }
+          },
+          '報告書.docx': { type: 'file' }
+        }
       },
       'プライベート': {
-        '猫.jpg': null,
-      },
+        type: 'folder',
+        children: {
+          '猫.jpg': { type: 'file' }
+        }
+      }
     },
   },
   {
@@ -51,12 +62,23 @@ export const questions: Question[] = [
     ],
     answer: {
       '国語': {
-        '読書感想文.docx': null,
-        '漢字テスト.pdf': null,
+        type: 'folder',
+        children: {
+          '読書感想文.docx': { type: 'file' },
+          '漢字テスト.pdf': { type: 'file' }
+        }
       },
       '数学': {
-        '宿題': { '計算ドリル.xlsx': null },
-      },
+        type: 'folder',
+        children: {
+          '宿題': {
+            type: 'folder',
+            children: {
+              '計算ドリル.xlsx': { type: 'file' }
+            }
+          }
+        }
+      }
     },
   },
 ]

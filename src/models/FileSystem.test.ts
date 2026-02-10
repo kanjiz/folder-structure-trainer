@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { FSNode } from './FileSystem'
+import type { AnswerTreeNode, AnswerTree } from './FileSystem'
 
 describe('FSNode', () => {
   it('should create a folder node', () => {
@@ -42,5 +43,46 @@ describe('FSNode', () => {
     folder.removeChild(file)
     expect(folder.children).toHaveLength(0)
     expect(file.parent).toBeNull()
+  })
+})
+
+describe('AnswerTreeNode', () => {
+  it('should create a file node', () => {
+    const fileNode: AnswerTreeNode = { type: 'file' }
+    expect(fileNode.type).toBe('file')
+    expect(fileNode.children).toBeUndefined()
+  })
+
+  it('should create a folder node with children', () => {
+    const folderNode: AnswerTreeNode = {
+      type: 'folder',
+      children: {
+        'test.txt': { type: 'file' }
+      }
+    }
+    expect(folderNode.type).toBe('folder')
+    expect(folderNode.children).toBeDefined()
+    expect(folderNode.children!['test.txt'].type).toBe('file')
+  })
+
+  it('should create nested folder structure', () => {
+    const tree: AnswerTree = {
+      'src': {
+        type: 'folder',
+        children: {
+          'main.ts': { type: 'file' },
+          'utils': {
+            type: 'folder',
+            children: {
+              'helper.ts': { type: 'file' }
+            }
+          }
+        }
+      }
+    }
+    expect(tree['src'].type).toBe('folder')
+    expect(tree['src'].children!['main.ts'].type).toBe('file')
+    expect(tree['src'].children!['utils'].type).toBe('folder')
+    expect(tree['src'].children!['utils'].children!['helper.ts'].type).toBe('file')
   })
 })

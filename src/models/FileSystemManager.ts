@@ -61,9 +61,12 @@ export class FileSystemManager {
     const tree: AnswerTree = {}
     for (const child of node.children) {
       if (child.type === 'folder') {
-        tree[child.name] = this.buildCurrentTree(child)
+        tree[child.name] = {
+          type: 'folder',
+          children: this.buildCurrentTree(child)
+        }
       } else {
-        tree[child.name] = null
+        tree[child.name] = { type: 'file' }
       }
     }
     return tree
@@ -96,11 +99,12 @@ export class FileSystemManager {
   ): void {
     for (const child of currentNode.children) {
       if (child.name in expectedTree) {
-        if (child.type === 'file' && expectedTree[child.name] === null) {
+        const expected = expectedTree[child.name]
+        if (child.type === expected.type) {
           correct.push(child.id)
-        } else if (child.type === 'folder' && expectedTree[child.name] !== null) {
-          correct.push(child.id)
-          this.compareTree(child, expectedTree[child.name] as AnswerTree, correct, incorrect)
+          if (child.type === 'folder' && expected.children) {
+            this.compareTree(child, expected.children, correct, incorrect)
+          }
         } else {
           incorrect.push(child.id)
         }
@@ -139,13 +143,12 @@ export class FileSystemManager {
     tree: AnswerTree,
     path: (string | null)[],
   ): (string | null)[] {
-    for (const [key, value] of Object.entries(tree)) {
-      if (key === name) {
-        const isMatch = type === 'file' ? value === null : value !== null
-        if (isMatch) return path
+    for (const [key, node] of Object.entries(tree)) {
+      if (key === name && node.type === type) {
+        return path
       }
-      if (value !== null) {
-        const result = this.getAnswerAncestors(name, type, value, [...path, key])
+      if (node.type === 'folder' && node.children) {
+        const result = this.getAnswerAncestors(name, type, node.children, [...path, key])
         if (result.length > 0) return result
       }
     }

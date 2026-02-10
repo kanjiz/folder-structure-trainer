@@ -43,7 +43,16 @@ export function renderGameView(
 
   renderTreeView(treePanel, manager)
 
-  const onMove = () => updateTreeView(treePanel, manager!)
+  const onMove = () => {
+    updateTreeView(treePanel, manager!)
+    // Practice mode: auto-complete when all items are correctly placed
+    if (question.mode === 'practice') {
+      const result = manager!.checkAnswer(question.answer)
+      if (result.incorrect.length === 0 && result.correct.length > 0) {
+        onComplete(result)
+      }
+    }
+  }
   createIconView(iconPanel, manager, question, onMove)
 
   if (question.mode === 'exercise') {

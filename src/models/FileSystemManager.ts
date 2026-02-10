@@ -61,9 +61,12 @@ export class FileSystemManager {
     const tree: AnswerTree = {}
     for (const child of node.children) {
       if (child.type === 'folder') {
-        tree[child.name] = this.buildCurrentTree(child)
+        tree[child.name] = {
+          type: 'folder',
+          children: this.buildCurrentTree(child)
+        }
       } else {
-        tree[child.name] = null
+        tree[child.name] = { type: 'file' }
       }
     }
     return tree

@@ -136,6 +136,27 @@ body {
   position: relative;
 }
 
+.icon-panel canvas {
+  display: block;
+}
+
+.icon-nav-btn {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  background: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.icon-nav-btn:hover {
+  background: #d0d0d0;
+}
+
 .action-area {
   display: flex;
   gap: 8px;

@@ -143,13 +143,12 @@ export class FileSystemManager {
     tree: AnswerTree,
     path: (string | null)[],
   ): (string | null)[] {
-    for (const [key, value] of Object.entries(tree)) {
-      if (key === name) {
-        const isMatch = type === 'file' ? value === null : value !== null
-        if (isMatch) return path
+    for (const [key, node] of Object.entries(tree)) {
+      if (key === name && node.type === type) {
+        return path
       }
-      if (value !== null) {
-        const result = this.getAnswerAncestors(name, type, value, [...path, key])
+      if (node.type === 'folder' && node.children) {
+        const result = this.getAnswerAncestors(name, type, node.children, [...path, key])
         if (result.length > 0) return result
       }
     }

@@ -99,11 +99,12 @@ export class FileSystemManager {
   ): void {
     for (const child of currentNode.children) {
       if (child.name in expectedTree) {
-        if (child.type === 'file' && expectedTree[child.name] === null) {
+        const expected = expectedTree[child.name]
+        if (child.type === expected.type) {
           correct.push(child.id)
-        } else if (child.type === 'folder' && expectedTree[child.name] !== null) {
-          correct.push(child.id)
-          this.compareTree(child, expectedTree[child.name] as AnswerTree, correct, incorrect)
+          if (child.type === 'folder' && expected.children) {
+            this.compareTree(child, expected.children, correct, incorrect)
+          }
         } else {
           incorrect.push(child.id)
         }

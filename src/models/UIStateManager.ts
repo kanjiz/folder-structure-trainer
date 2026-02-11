@@ -107,4 +107,11 @@ export class UIStateManager {
   getLastSelected(): string | null {
     return this.lastSelectedId
   }
+
+  /**
+   * 選択中のノードIDリストを取得
+   */
+  getSelectedIds(): string[] {
+    return Array.from(this.selection)
+  }
 }

@@ -21,11 +21,11 @@ describe('ResultView', () => {
       mode: 'exercise',
       instructions: [],
       items: [
-        { id: 'file1', name: 'ファイル1.txt', type: 'file', path: 'Desktop' },
-        { id: 'file2', name: 'ファイル2.txt', type: 'file', path: 'Desktop' },
-        { id: 'file3', name: 'ファイル3.txt', type: 'file', path: 'Desktop' },
-        { id: 'folder1', name: 'フォルダ1', type: 'folder', path: 'Desktop' },
-        { id: 'folder2', name: 'フォルダ2', type: 'folder', path: 'Desktop' },
+        { id: 'file1', name: 'ファイル1.txt', type: 'file' },
+        { id: 'file2', name: 'ファイル2.txt', type: 'file' },
+        { id: 'file3', name: 'ファイル3.txt', type: 'file' },
+        { id: 'folder1', name: 'フォルダ1', type: 'folder' },
+        { id: 'folder2', name: 'フォルダ2', type: 'folder' },
       ],
       answer: {}
     }

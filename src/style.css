@@ -284,6 +284,11 @@ body {
   background-color: rgba(0, 120, 215, 0.1);
 }
 
+.breadcrumb-item.drop-target {
+  background-color: rgba(0, 120, 215, 0.5);
+  border: 2px solid rgba(0, 120, 215, 0.8);
+}
+
 .breadcrumb-separator {
   color: #666;
   margin: 0 4px;

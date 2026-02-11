@@ -27,8 +27,42 @@ export function updateTreeView(
   onUpdate?: () => void
 ): void {
   container.innerHTML = ''
-  const ul = buildTreeList(manager.root, manager, onUpdate)
-  container.appendChild(ul)
+
+  // ルートノード（Desktop）を作成
+  const rootUl = document.createElement('ul')
+  rootUl.className = 'tree-list'
+  rootUl.setAttribute('role', 'tree')
+
+  const rootLi = document.createElement('li')
+  rootLi.className = 'tree-item tree-folder'
+  rootLi.dataset.nodeId = manager.root.id
+  rootLi.setAttribute('role', 'treeitem')
+  rootLi.setAttribute('aria-label', 'Desktop (フォルダ)')
+  rootLi.setAttribute('aria-expanded', 'true')
+
+  const icon = '\u{1F4C1}'
+  rootLi.textContent = `${icon} Desktop`
+
+  // ルートへのドロップイベントを追加
+  rootLi.addEventListener('dragover', (e) => {
+    handleTreeDragOver(e, rootLi)
+  })
+
+  rootLi.addEventListener('dragleave', (e) => {
+    handleTreeDragLeave(e, rootLi)
+  })
+
+  rootLi.addEventListener('drop', (e) => {
+    handleTreeDrop(e, manager.root.id, rootLi, manager, onUpdate)
+  })
+
+  // ルートの子要素を追加
+  if (manager.root.children.length > 0) {
+    rootLi.appendChild(buildTreeList(manager.root, manager, onUpdate))
+  }
+
+  rootUl.appendChild(rootLi)
+  container.appendChild(rootUl)
 }
 
 /**

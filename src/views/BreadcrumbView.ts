@@ -14,6 +14,10 @@ export function renderBreadcrumbView(
   container.innerHTML = ''
   container.className = 'breadcrumb-view'
 
+  // ARIA attributes for navigation
+  container.setAttribute('role', 'navigation')
+  container.setAttribute('aria-label', 'パンくずリスト')
+
   const path = getPath(currentFolder, manager)
   const parts = path.split(' > ')
   const folders = getFolders(currentFolder, manager)
@@ -24,6 +28,11 @@ export function renderBreadcrumbView(
     span.textContent = part
     span.dataset.depth = index.toString()
     span.dataset.folderId = folders[index].id
+
+    // ARIA attributes for breadcrumb item
+    span.setAttribute('role', 'button')
+    span.setAttribute('aria-label', `${part}に移動`)
+    span.tabIndex = 0
 
     // クリックでナビゲーション
     span.addEventListener('click', () => {

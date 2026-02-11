@@ -45,11 +45,21 @@ function buildTreeList(
 ): HTMLUListElement {
   const ul = document.createElement('ul')
   ul.className = 'tree-list'
+  // ARIA attributes for tree
+  ul.setAttribute('role', 'tree')
 
   for (const child of node.children) {
     const li = document.createElement('li')
     li.className = `tree-item tree-${child.type}`
     li.dataset.nodeId = child.id
+
+    // ARIA attributes for tree item
+    li.setAttribute('role', 'treeitem')
+    li.setAttribute('aria-label', `${child.name} (${child.type === 'folder' ? 'フォルダ' : 'ファイル'})`)
+    if (child.type === 'folder') {
+      li.setAttribute('aria-expanded', child.children.length > 0 ? 'true' : 'false')
+    }
+
     const icon = child.type === 'folder' ? '\u{1F4C1}' : '\u{1F4C4}'
     li.textContent = `${icon} ${child.name}`
 

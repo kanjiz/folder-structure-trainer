@@ -402,3 +402,32 @@ body {
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+/* Context Menu */
+.context-menu {
+  position: fixed;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 4px 0;
+  min-width: 150px;
+  z-index: 1000;
+  font-family: 'BIZ UDPGothic', sans-serif;
+  font-size: 14px;
+}
+
+.context-menu-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.context-menu-item:hover:not(.disabled) {
+  background-color: rgba(0, 120, 215, 0.1);
+}
+
+.context-menu-item.disabled {
+  color: #999;
+  cursor: not-allowed;
+}

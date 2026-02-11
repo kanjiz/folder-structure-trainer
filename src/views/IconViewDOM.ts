@@ -1,6 +1,10 @@
 import type { FSNode } from '../models/FileSystem'
 import type { FileSystemManager } from '../models/FileSystemManager'
 import type { UIStateManager } from '../models/UIStateManager'
+import { showContextMenu, hideContextMenu } from './ContextMenu'
+
+// キーボードイベントハンドラの参照を保持
+let keydownHandler: ((e: KeyboardEvent) => void) | null = null
 
 /**
  * DOM版のIconView
@@ -13,6 +17,8 @@ export function createIconViewDOM(
   onUpdate: () => void
 ): void {
   renderIconViewDOM(container, manager, uiState, onUpdate)
+  setupKeyboardShortcuts(container, manager, uiState, onUpdate)
+  setupContextMenuForEmptyArea(container, uiState, manager, onUpdate)
 }
 
 /**
@@ -50,6 +56,11 @@ function createIconItem(
   div.tabIndex = 0
   div.draggable = true
 
+  // ARIA attributes
+  div.setAttribute('role', 'button')
+  div.setAttribute('aria-label', `${node.name} (${node.type === 'folder' ? 'フォルダ' : 'ファイル'})`)
+  div.setAttribute('aria-selected', uiState.isSelected(node.id).toString())
+
   if (uiState.isSelected(node.id)) {
     div.classList.add('selected')
   }
@@ -81,6 +92,12 @@ function createIconItem(
   // ドラッグ開始イベント
   div.addEventListener('dragstart', (e) => {
     handleDragStart(e, node.id, uiState)
+  })
+
+  // コンテキストメニューイベント
+  div.addEventListener('contextmenu', (e) => {
+    e.preventDefault()
+    showItemContextMenu(e, node.id, uiState, manager, onUpdate)
   })
 
   // ドラッグオーバーイベント（フォルダのみ）
@@ -279,9 +296,143 @@ function handleDrop(
 }
 
 /**
+ * アイテムのコンテキストメニューを表示
+ */
+function showItemContextMenu(
+  event: MouseEvent,
+  nodeId: string,
+  uiState: UIStateManager,
+  manager: FileSystemManager,
+  onUpdate: () => void
+): void {
+  // クリックされたアイテムが選択されていない場合は選択する
+  if (!uiState.isSelected(nodeId)) {
+    uiState.clearSelection()
+    uiState.toggleSelection(nodeId)
+    uiState.setLastSelected(nodeId)
+    onUpdate()
+  }
+
+  showContextMenu({
+    x: event.clientX,
+    y: event.clientY,
+    items: [
+      {
+        label: '切り取り',
+        onClick: () => {
+          uiState.cut()
+          onUpdate()
+        }
+      },
+      {
+        label: '貼り付け',
+        disabled: uiState.clipboard.size === 0,
+        onClick: () => {
+          pasteItems(uiState, manager, onUpdate)
+        }
+      }
+    ]
+  })
+}
+
+/**
+ * 空白エリアのコンテキストメニューを設定
+ */
+function setupContextMenuForEmptyArea(
+  container: HTMLElement,
+  uiState: UIStateManager,
+  manager: FileSystemManager,
+  onUpdate: () => void
+): void {
+  container.addEventListener('contextmenu', (e) => {
+    // アイコンアイテム上でのクリックは無視
+    const target = e.target as HTMLElement
+    if (target.closest('.icon-item')) {
+      return
+    }
+
+    e.preventDefault()
+    showContextMenu({
+      x: e.clientX,
+      y: e.clientY,
+      items: [
+        {
+          label: '貼り付け',
+          disabled: uiState.clipboard.size === 0,
+          onClick: () => {
+            pasteItems(uiState, manager, onUpdate)
+          }
+        }
+      ]
+    })
+  })
+}
+
+/**
+ * キーボードショートカットを設定
+ */
+function setupKeyboardShortcuts(
+  container: HTMLElement,
+  manager: FileSystemManager,
+  uiState: UIStateManager,
+  onUpdate: () => void
+): void {
+  // 既存のハンドラを削除
+  if (keydownHandler) {
+    container.removeEventListener('keydown', keydownHandler)
+  }
+
+  // 新しいハンドラを作成
+  keydownHandler = (e: KeyboardEvent) => {
+    // Ctrl+X または Cmd+X (Mac)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'x') {
+      e.preventDefault()
+      if (uiState.selection.size > 0) {
+        uiState.cut()
+        onUpdate()
+      }
+    }
+
+    // Ctrl+V または Cmd+V (Mac)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+      e.preventDefault()
+      if (uiState.clipboard.size > 0) {
+        pasteItems(uiState, manager, onUpdate)
+      }
+    }
+  }
+
+  container.addEventListener('keydown', keydownHandler)
+}
+
+/**
+ * クリップボードのアイテムを現在のフォルダに貼り付け
+ */
+function pasteItems(
+  uiState: UIStateManager,
+  manager: FileSystemManager,
+  onUpdate: () => void
+): void {
+  const clipboardIds = Array.from(uiState.clipboard)
+  const targetFolderId = uiState.currentFolder.id === 'root' ? 'root' : uiState.currentFolder.id
+
+  for (const nodeId of clipboardIds) {
+    manager.moveNode(nodeId, targetFolderId)
+  }
+
+  uiState.clearClipboard()
+  onUpdate()
+}
+
+/**
  * IconViewDOMを破棄
  */
-export function destroyIconViewDOM(): void {
-  // 現時点では特に何もしない
-  // 将来的にイベントリスナーのクリーンアップなどが必要になる可能性
+export function destroyIconViewDOM(container: HTMLElement): void {
+  // キーボードイベントハンドラをクリーンアップ
+  if (keydownHandler) {
+    container.removeEventListener('keydown', keydownHandler)
+    keydownHandler = null
+  }
+  // コンテキストメニューを閉じる
+  hideContextMenu()
 }

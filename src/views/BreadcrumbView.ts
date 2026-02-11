@@ -12,7 +12,7 @@ export function renderBreadcrumbView(
   onUpdate?: () => void
 ): void {
   container.innerHTML = ''
-  container.className = 'breadcrumb-view'
+  container.classList.add('breadcrumb-view')
 
   // ARIA attributes for navigation
   container.setAttribute('role', 'navigation')

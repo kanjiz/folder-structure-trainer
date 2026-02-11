@@ -72,7 +72,7 @@ export function renderGameView(
   // 更新時のコールバック
   const onUpdate = () => {
     renderBreadcrumbView(breadcrumbPanel, uiStateManager!.currentFolder, manager!, onNavigate, onUpdate)
-    updateTreeView(treePanel, manager!)
+    updateTreeView(treePanel, manager!, onUpdate)
     createIconViewDOM(iconPanel, manager!, uiStateManager!, onUpdate)
 
     // Practice mode: auto-complete when all items are correctly placed
@@ -86,7 +86,7 @@ export function renderGameView(
 
   // 初期レンダリング
   renderBreadcrumbView(breadcrumbPanel, uiStateManager.currentFolder, manager, onNavigate, onUpdate)
-  renderTreeView(treePanel, manager)
+  renderTreeView(treePanel, manager, onUpdate)
   createIconViewDOM(iconPanel, manager, uiStateManager, onUpdate)
 
   if (question.mode === 'exercise') {

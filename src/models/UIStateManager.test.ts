@@ -82,4 +82,26 @@ describe('UIStateManager', () => {
       expect(uiState.currentFolder).toBe(childFolder)
     })
   })
+
+  describe('range selection', () => {
+    it('should select range between two items', () => {
+      const nodeIds = ['item1', 'item2', 'item3', 'item4']
+      uiState.setLastSelected('item1')
+      uiState.selectRange(nodeIds, 'item1', 'item3')
+
+      expect(uiState.isSelected('item1')).toBe(true)
+      expect(uiState.isSelected('item2')).toBe(true)
+      expect(uiState.isSelected('item3')).toBe(true)
+      expect(uiState.isSelected('item4')).toBe(false)
+    })
+
+    it('should select range in reverse order', () => {
+      const nodeIds = ['item1', 'item2', 'item3', 'item4']
+      uiState.selectRange(nodeIds, 'item3', 'item1')
+
+      expect(uiState.isSelected('item1')).toBe(true)
+      expect(uiState.isSelected('item2')).toBe(true)
+      expect(uiState.isSelected('item3')).toBe(true)
+    })
+  })
 })

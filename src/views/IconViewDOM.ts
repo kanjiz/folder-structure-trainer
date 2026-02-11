@@ -87,16 +87,31 @@ function handleItemClick(
   nodeId: string,
   event: MouseEvent,
   uiState: UIStateManager,
-  manager: FileSystemManager,
+  _manager: FileSystemManager,
   onUpdate: () => void
 ): void {
+  const items = uiState.currentFolder.children
+  const nodeIds = items.map(n => n.id)
+
   if (event.ctrlKey || event.metaKey) {
     // Ctrl+クリック：トグル選択
     uiState.toggleSelection(nodeId)
+    uiState.setLastSelected(nodeId)
+  } else if (event.shiftKey) {
+    // Shift+クリック：範囲選択
+    const lastSelected = uiState.getLastSelected()
+    if (lastSelected) {
+      uiState.selectRange(nodeIds, lastSelected, nodeId)
+    } else {
+      uiState.clearSelection()
+      uiState.toggleSelection(nodeId)
+    }
+    uiState.setLastSelected(nodeId)
   } else {
     // 通常クリック：単一選択
     uiState.clearSelection()
     uiState.toggleSelection(nodeId)
+    uiState.setLastSelected(nodeId)
   }
   onUpdate()
 }

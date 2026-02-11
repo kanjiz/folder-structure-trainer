@@ -1,4 +1,4 @@
-import type { Question } from '../models/FileSystem'
+import type { Question, FSNode } from '../models/FileSystem'
 import { FileSystemManager } from '../models/FileSystemManager'
 import { UIStateManager } from '../models/UIStateManager'
 import { renderTreeView, updateTreeView } from './TreeView'
@@ -64,7 +64,7 @@ export function renderGameView(
   iconPanelRef = iconPanel
 
   // ナビゲーション時のコールバック
-  const onNavigate = (folder: typeof manager.root) => {
+  const onNavigate = (folder: FSNode) => {
     uiStateManager!.navigateToFolder(folder)
     onUpdate()
   }

@@ -138,6 +138,53 @@ function handleItemClick(
 }
 
 /**
+ * ドラッグプレビューを作成
+ */
+function createDragPreview(
+  draggedIds: string[],
+  uiState: UIStateManager
+): HTMLElement {
+  const preview = document.createElement('div')
+  preview.className = 'drag-preview'
+
+  const maxVisibleItems = 3
+  const visibleCount = Math.min(draggedIds.length, maxVisibleItems)
+
+  // 最大3つのアイテムを表示
+  for (let i = 0; i < visibleCount; i++) {
+    const node = uiState.currentFolder.children.find(n => n.id === draggedIds[i])
+    if (!node) continue
+
+    const item = document.createElement('div')
+    item.className = 'drag-preview-item'
+    item.style.top = `${i * 4}px`
+    item.style.left = `${i * 4}px`
+
+    const icon = document.createElement('span')
+    icon.className = 'drag-preview-icon'
+    icon.textContent = node.type === 'folder' ? '📁' : '📄'
+    item.appendChild(icon)
+
+    const name = document.createElement('span')
+    name.className = 'drag-preview-name'
+    name.textContent = node.name
+    item.appendChild(name)
+
+    preview.appendChild(item)
+  }
+
+  // 4つ以上の場合はバッジを表示
+  if (draggedIds.length > maxVisibleItems) {
+    const badge = document.createElement('div')
+    badge.className = 'drag-preview-badge'
+    badge.textContent = `+${draggedIds.length - maxVisibleItems}`
+    preview.appendChild(badge)
+  }
+
+  return preview
+}
+
+/**
  * ドラッグ開始ハンドラ
  */
 function handleDragStart(
@@ -160,6 +207,18 @@ function handleDragStart(
   // dataTransferにIDリストを保存
   event.dataTransfer.effectAllowed = 'move'
   event.dataTransfer.setData('text/plain', JSON.stringify(draggedIds))
+
+  // ドラッグプレビューを設定
+  const preview = createDragPreview(draggedIds, uiState)
+  document.body.appendChild(preview)
+  event.dataTransfer.setDragImage(preview, 10, 10)
+
+  // プレビューを少し遅延してから削除（ドラッグイメージが作成された後）
+  setTimeout(() => {
+    if (preview.parentNode) {
+      preview.parentNode.removeChild(preview)
+    }
+  }, 0)
 }
 
 /**

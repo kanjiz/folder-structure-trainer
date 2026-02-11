@@ -261,3 +261,30 @@ body {
 .btn-secondary:hover {
   opacity: 0.85;
 }
+
+/* Breadcrumb View */
+.breadcrumb-view {
+  padding: 12px 20px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+  font-family: 'BIZ UDPGothic', sans-serif;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.breadcrumb-item:hover {
+  background-color: rgba(0, 120, 215, 0.1);
+}
+
+.breadcrumb-separator {
+  color: #666;
+  margin: 0 4px;
+}

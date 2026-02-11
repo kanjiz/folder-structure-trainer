@@ -183,6 +183,14 @@ body {
 .tree-item {
   padding: 2px 0;
   font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.tree-item.drop-target {
+  background-color: rgba(0, 120, 215, 0.3);
+  border: 2px solid rgba(0, 120, 215, 0.8);
 }
 
 /* === Result View === */

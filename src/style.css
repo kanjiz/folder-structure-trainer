@@ -324,6 +324,11 @@ body {
   box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.5);
 }
 
+.icon-item.drop-target {
+  background-color: rgba(0, 120, 215, 0.5);
+  border: 2px solid rgba(0, 120, 215, 0.8);
+}
+
 .icon-symbol {
   font-size: 48px;
   margin-bottom: 8px;

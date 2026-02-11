@@ -48,6 +48,7 @@ function createIconItem(
   div.className = 'icon-item'
   div.dataset.nodeId = node.id
   div.tabIndex = 0
+  div.draggable = true
 
   if (uiState.isSelected(node.id)) {
     div.classList.add('selected')
@@ -76,6 +77,26 @@ function createIconItem(
       onUpdate()
     }
   })
+
+  // ドラッグ開始イベント
+  div.addEventListener('dragstart', (e) => {
+    handleDragStart(e, node.id, uiState)
+  })
+
+  // ドラッグオーバーイベント（フォルダのみ）
+  if (node.type === 'folder') {
+    div.addEventListener('dragover', (e) => {
+      handleDragOver(e, div)
+    })
+
+    div.addEventListener('dragleave', (e) => {
+      handleDragLeave(e, div)
+    })
+
+    div.addEventListener('drop', (e) => {
+      handleDrop(e, node.id, div, manager, onUpdate)
+    })
+  }
 
   return div
 }
@@ -114,6 +135,88 @@ function handleItemClick(
     uiState.setLastSelected(nodeId)
   }
   onUpdate()
+}
+
+/**
+ * ドラッグ開始ハンドラ
+ */
+function handleDragStart(
+  event: DragEvent,
+  nodeId: string,
+  uiState: UIStateManager
+): void {
+  if (!event.dataTransfer) return
+
+  // 選択されているアイテムのIDリストを取得
+  let draggedIds: string[]
+  if (uiState.isSelected(nodeId)) {
+    // ドラッグ中のアイテムが選択済みなら、全選択アイテムをドラッグ
+    draggedIds = uiState.getSelectedIds()
+  } else {
+    // そうでなければこのアイテムのみをドラッグ
+    draggedIds = [nodeId]
+  }
+
+  // dataTransferにIDリストを保存
+  event.dataTransfer.effectAllowed = 'move'
+  event.dataTransfer.setData('text/plain', JSON.stringify(draggedIds))
+}
+
+/**
+ * ドラッグオーバーハンドラ
+ */
+function handleDragOver(event: DragEvent, element: HTMLElement): void {
+  event.preventDefault()
+  if (!event.dataTransfer) return
+
+  event.dataTransfer.dropEffect = 'move'
+  element.classList.add('drop-target')
+}
+
+/**
+ * ドラッグリーブハンドラ
+ */
+function handleDragLeave(event: DragEvent, element: HTMLElement): void {
+  // イベントが子要素に移動した場合は無視
+  const rect = element.getBoundingClientRect()
+  const x = event.clientX
+  const y = event.clientY
+
+  if (x <= rect.left || x >= rect.right || y <= rect.top || y >= rect.bottom) {
+    element.classList.remove('drop-target')
+  }
+}
+
+/**
+ * ドロップハンドラ
+ */
+function handleDrop(
+  event: DragEvent,
+  targetFolderId: string,
+  element: HTMLElement,
+  manager: FileSystemManager,
+  onUpdate: () => void
+): void {
+  event.preventDefault()
+  element.classList.remove('drop-target')
+
+  if (!event.dataTransfer) return
+
+  try {
+    const draggedIds = JSON.parse(event.dataTransfer.getData('text/plain')) as string[]
+
+    // ドラッグされた各アイテムを移動
+    for (const nodeId of draggedIds) {
+      // 自分自身へのドロップは無視
+      if (nodeId === targetFolderId) continue
+
+      manager.moveNode(nodeId, targetFolderId)
+    }
+
+    onUpdate()
+  } catch (error) {
+    console.error('Drop failed:', error)
+  }
 }
 
 /**

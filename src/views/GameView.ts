@@ -1,10 +1,18 @@
 import type { Question } from '../models/FileSystem'
 import { FileSystemManager } from '../models/FileSystemManager'
+import { UIStateManager } from '../models/UIStateManager'
 import { renderTreeView, updateTreeView } from './TreeView'
-import { createIconView, destroyIconView } from './IconView'
+import { renderBreadcrumbView } from './BreadcrumbView'
+import { createIconViewDOM, destroyIconViewDOM } from './IconViewDOM'
 
 /** 現在のゲームセッションで使用中のFileSystemManagerインスタンス */
 let manager: FileSystemManager | null = null
+
+/** 現在のゲームセッションで使用中のUIStateManagerインスタンス */
+let uiStateManager: UIStateManager | null = null
+
+/** IconView用のコンテナ要素参照 */
+let iconPanelRef: HTMLElement | null = null
 
 /**
  * ゲーム画面をレンダリングします
@@ -22,6 +30,9 @@ export function renderGameView(
   manager = new FileSystemManager()
   manager.loadQuestion(question)
 
+  // UIStateManagerを初期化
+  uiStateManager = new UIStateManager(manager.root)
+
   const wrapper = document.createElement('div')
   wrapper.className = 'game-view'
 
@@ -33,6 +44,7 @@ export function renderGameView(
       </ul>
     </div>
     <div class="main-area">
+      <div class="breadcrumb-panel" id="breadcrumb-panel"></div>
       <div class="tree-panel" id="tree-panel"></div>
       <div class="icon-panel" id="icon-panel"></div>
     </div>
@@ -46,13 +58,23 @@ export function renderGameView(
 
   container.appendChild(wrapper)
 
+  const breadcrumbPanel = wrapper.querySelector<HTMLElement>('#breadcrumb-panel')!
   const treePanel = wrapper.querySelector<HTMLElement>('#tree-panel')!
   const iconPanel = wrapper.querySelector<HTMLElement>('#icon-panel')!
+  iconPanelRef = iconPanel
 
-  renderTreeView(treePanel, manager)
+  // ナビゲーション時のコールバック
+  const onNavigate = (folder: typeof manager.root) => {
+    uiStateManager!.navigateToFolder(folder)
+    onUpdate()
+  }
 
-  const onMove = () => {
+  // 更新時のコールバック
+  const onUpdate = () => {
+    renderBreadcrumbView(breadcrumbPanel, uiStateManager!.currentFolder, manager!, onNavigate, onUpdate)
     updateTreeView(treePanel, manager!)
+    createIconViewDOM(iconPanel, manager!, uiStateManager!, onUpdate)
+
     // Practice mode: auto-complete when all items are correctly placed
     if (question.mode === 'practice') {
       const result = manager!.checkAnswer(question.answer)
@@ -61,7 +83,11 @@ export function renderGameView(
       }
     }
   }
-  createIconView(iconPanel, manager, question, onMove)
+
+  // 初期レンダリング
+  renderBreadcrumbView(breadcrumbPanel, uiStateManager.currentFolder, manager, onNavigate, onUpdate)
+  renderTreeView(treePanel, manager)
+  createIconViewDOM(iconPanel, manager, uiStateManager, onUpdate)
 
   if (question.mode === 'exercise') {
     wrapper.querySelector('#check-btn')!.addEventListener('click', () => {
@@ -77,8 +103,12 @@ export function renderGameView(
  * ゲーム画面を破棄し、リソースをクリーンアップします
  */
 export function destroyGameView(): void {
-  destroyIconView()
+  if (iconPanelRef) {
+    destroyIconViewDOM(iconPanelRef)
+    iconPanelRef = null
+  }
   manager = null
+  uiStateManager = null
 }
 
 /**

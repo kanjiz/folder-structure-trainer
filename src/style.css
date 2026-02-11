@@ -117,14 +117,26 @@ body {
 }
 
 .main-area {
-  display: flex;
+  display: grid;
+  grid-template-columns: 260px 1fr 300px;
+  grid-template-rows: auto 1fr;
   gap: 8px;
   flex: 1;
   min-height: 0;
 }
 
+.breadcrumb-panel {
+  grid-column: 1 / -1;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+
 .tree-panel {
-  width: 260px;
+  grid-column: 1;
+  grid-row: 2;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -133,7 +145,8 @@ body {
 }
 
 .icon-panel {
-  flex: 1;
+  grid-column: 2 / -1;
+  grid-row: 2;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;

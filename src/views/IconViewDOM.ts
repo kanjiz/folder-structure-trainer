@@ -54,6 +54,9 @@ function renderIconViewDOM(
     if (itemToFocus) {
       itemToFocus.focus()
     }
+  } else if (items.length === 0) {
+    // 空のフォルダの場合、コンテナ自体にフォーカスを移す
+    container.focus()
   }
 }
 

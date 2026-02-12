@@ -108,6 +108,23 @@ describe('IconViewDOM', () => {
       expect(document.activeElement).toBe(iconItem)
     })
 
+    it('should preserve focus after DOM re-render', () => {
+      // アイテムをクリックしてフォーカス
+      const iconItem = container.querySelector<HTMLElement>('.icon-item')
+      expect(iconItem).toBeTruthy()
+      const nodeId = iconItem!.dataset.nodeId
+
+      iconItem!.click()
+      expect(document.activeElement).toBe(iconItem)
+
+      // DOM再描画（createIconViewDOMを再実行）
+      createIconViewDOM(container, manager, uiState, onUpdate)
+
+      // 同じnodeIdの要素にフォーカスが保持されているべき
+      const newIconItem = container.querySelector<HTMLElement>(`[data-node-id="${nodeId}"]`)
+      expect(document.activeElement).toBe(newIconItem)
+    })
+
     it('should cut selected item with Ctrl+X', () => {
       // アイテムをクリックして選択
       const iconItem = container.querySelector<HTMLElement>('.icon-item')

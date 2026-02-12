@@ -238,7 +238,20 @@ describe('IconViewDOM', () => {
       expect(container.tabIndex).toBeGreaterThanOrEqual(0)
     })
 
-    it('should paste items in empty folder with Cmd+V', () => {
+    it('should auto-focus container when navigating to empty folder', () => {
+      // フォルダに移動（空のフォルダをシミュレート）
+      const folder = manager.root.children.find(n => n.type === 'folder')
+      expect(folder).toBeTruthy()
+      uiState.navigateToFolder(folder!)
+
+      // DOM再描画（空のフォルダなので子要素なし）
+      createIconViewDOM(container, manager, uiState, onUpdate)
+
+      // 空のフォルダでは自動的にコンテナにフォーカスが移るべき
+      expect(document.activeElement).toBe(container)
+    })
+
+    it('should paste items in empty folder with Cmd+V without clicking', () => {
       // アイテムをクリップボードに入れる
       uiState.toggleSelection('file1')
       uiState.cut()
@@ -253,8 +266,7 @@ describe('IconViewDOM', () => {
       createIconViewDOM(container, manager, uiState, onUpdate)
       onUpdate.mockClear()
 
-      // コンテナ自体にフォーカスを移す
-      container.focus()
+      // 自動的にフォーカスが移っているはず（クリック不要）
       expect(document.activeElement).toBe(container)
 
       // Cmd+V キーイベントをディスパッチ

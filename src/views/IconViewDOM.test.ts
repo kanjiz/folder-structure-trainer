@@ -93,4 +93,117 @@ describe('IconViewDOM', () => {
       expect(uiState.selection.size).toBe(0)
     })
   })
+
+  describe('キーボードショートカット - 切り取り', () => {
+    it('should focus item when clicked', () => {
+      // アイコンアイテムを取得
+      const iconItem = container.querySelector<HTMLElement>('.icon-item')
+      expect(iconItem).toBeTruthy()
+
+      // クリックイベントをディスパッチ
+      const clickEvent = new MouseEvent('click', { bubbles: true })
+      iconItem!.dispatchEvent(clickEvent)
+
+      // アイテムにフォーカスが移っているべき
+      expect(document.activeElement).toBe(iconItem)
+    })
+
+    it('should cut selected item with Ctrl+X', () => {
+      // アイテムをクリックして選択
+      const iconItem = container.querySelector<HTMLElement>('.icon-item')
+      expect(iconItem).toBeTruthy()
+      iconItem!.click()
+
+      // 選択されていることを確認
+      expect(uiState.selection.size).toBe(1)
+      expect(uiState.clipboard.size).toBe(0)
+
+      // Ctrl+X キーイベントをディスパッチ
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'x',
+        ctrlKey: true,
+        bubbles: true
+      })
+      iconItem!.dispatchEvent(keyEvent)
+
+      // クリップボードに入っているべき
+      expect(uiState.clipboard.size).toBe(1)
+      expect(onUpdate).toHaveBeenCalled()
+    })
+
+    it('should cut selected item with Cmd+X on Mac', () => {
+      // アイテムをクリックして選択
+      const iconItem = container.querySelector<HTMLElement>('.icon-item')
+      expect(iconItem).toBeTruthy()
+      iconItem!.click()
+
+      // 選択されていることを確認
+      expect(uiState.selection.size).toBe(1)
+      expect(uiState.clipboard.size).toBe(0)
+
+      // Cmd+X キーイベントをディスパッチ
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'x',
+        metaKey: true,
+        bubbles: true
+      })
+      iconItem!.dispatchEvent(keyEvent)
+
+      // クリップボードに入っているべき
+      expect(uiState.clipboard.size).toBe(1)
+      expect(onUpdate).toHaveBeenCalled()
+    })
+
+    it('should cut multiple selected items with Cmd+X', () => {
+      // 複数のアイテムを選択
+      uiState.toggleSelection('file1')
+      uiState.toggleSelection('file2')
+      expect(uiState.selection.size).toBe(2)
+
+      // アイテムをクリック（フォーカスを移すため）
+      const iconItem = container.querySelector<HTMLElement>('.icon-item')
+      iconItem!.click()
+
+      // Cmd+X キーイベントをディスパッチ
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'x',
+        metaKey: true,
+        bubbles: true
+      })
+      iconItem!.dispatchEvent(keyEvent)
+
+      // 複数アイテムがクリップボードに入っているべき
+      expect(uiState.clipboard.size).toBeGreaterThan(0)
+      expect(onUpdate).toHaveBeenCalled()
+    })
+
+    it('should do nothing when pressing Cmd+X without selection', () => {
+      // 何も選択していない状態
+      expect(uiState.selection.size).toBe(0)
+
+      // onUpdate の呼び出し回数をリセット
+      onUpdate.mockClear()
+
+      // アイテムをクリック（選択しない）
+      const iconItem = container.querySelector<HTMLElement>('.icon-item')
+      const clickEvent = new MouseEvent('click', { bubbles: true })
+      iconItem!.dispatchEvent(clickEvent)
+
+      // 選択をクリア
+      uiState.clearSelection()
+      onUpdate.mockClear()
+
+      // Cmd+X キーイベントをディスパッチ
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'x',
+        metaKey: true,
+        bubbles: true
+      })
+      iconItem!.dispatchEvent(keyEvent)
+
+      // 何も起きないべき
+      expect(uiState.clipboard.size).toBe(0)
+      expect(onUpdate).not.toHaveBeenCalled()
+    })
+  })
 })

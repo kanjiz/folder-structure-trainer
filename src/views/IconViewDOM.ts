@@ -79,6 +79,7 @@ function createIconItem(
 
   // クリックイベント（選択）
   div.addEventListener('click', (e) => {
+    div.focus()
     handleItemClick(node.id, e, uiState, manager, onUpdate)
   })
 

@@ -53,14 +53,13 @@ function renderIconViewDOM(
     const itemToFocus = container.querySelector<HTMLElement>(`[data-node-id="${focusedNodeId}"]`)
     if (itemToFocus) {
       itemToFocus.focus()
-    } else {
-      // フォーカスを復元できない場合（フォルダ移動など）、コンテナにフォーカス
-      container.focus()
+      return // フォーカス復元成功
     }
-  } else if (items.length === 0) {
-    // 最初からフォーカスがない場合で、空のフォルダの場合、コンテナにフォーカス
-    container.focus()
   }
+
+  // フォーカス復元に失敗、または初回レンダリングの場合
+  // コンテナにフォーカスを移す（どこからナビゲーションしてもキーボード操作可能に）
+  container.focus()
 }
 
 /**

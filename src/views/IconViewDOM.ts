@@ -16,6 +16,9 @@ export function createIconViewDOM(
   uiState: UIStateManager,
   onUpdate: () => void
 ): void {
+  // コンテナをフォーカス可能にする（空のフォルダでもキーボードショートカットが使えるように）
+  container.tabIndex = 0
+
   renderIconViewDOM(container, manager, uiState, onUpdate)
   setupKeyboardShortcuts(container, manager, uiState, onUpdate)
   setupContextMenuForEmptyArea(container, uiState, manager, onUpdate)
@@ -31,6 +34,10 @@ function renderIconViewDOM(
   uiState: UIStateManager,
   onUpdate: () => void
 ): void {
+  // フォーカスされている要素のIDを保存
+  const activeElement = document.activeElement as HTMLElement
+  const focusedNodeId = activeElement?.dataset?.nodeId
+
   container.innerHTML = ''
   container.className = 'icon-view-dom'
 
@@ -40,6 +47,19 @@ function renderIconViewDOM(
     const itemEl = createIconItem(node, uiState, manager, onUpdate)
     container.appendChild(itemEl)
   })
+
+  // フォーカスを復元
+  if (focusedNodeId) {
+    const itemToFocus = container.querySelector<HTMLElement>(`[data-node-id="${focusedNodeId}"]`)
+    if (itemToFocus) {
+      itemToFocus.focus()
+      return // フォーカス復元成功
+    }
+  }
+
+  // フォーカス復元に失敗、または初回レンダリングの場合
+  // コンテナにフォーカスを移す（どこからナビゲーションしてもキーボード操作可能に）
+  container.focus()
 }
 
 /**
@@ -79,6 +99,7 @@ function createIconItem(
 
   // クリックイベント（選択）
   div.addEventListener('click', (e) => {
+    div.focus()
     handleItemClick(node.id, e, uiState, manager, onUpdate)
   })
 

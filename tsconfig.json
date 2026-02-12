@@ -1,26 +1,45 @@
 {
   "compilerOptions": {
+    /* 基本設定 */
+    // ES2022の機能を使用（モダンブラウザ対応）
     "target": "ES2022",
+    // クラスフィールドの標準仕様に準拠
     "useDefineForClassFields": true,
+    // ESModuleの最新機能を使用
     "module": "ESNext",
+    // ブラウザ環境用のライブラリ型定義を読み込む
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // Viteの型定義を使用
     "types": ["vite/client"],
+    // 外部ライブラリの型チェックをスキップ（ビルド高速化）
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    /* Bundler mode - Viteなどのバンドラー使用時の設定 */
+    // バンドラー専用のモジュール解決方式
     "moduleResolution": "bundler",
+    // .ts拡張子付きimportを許可（Viteが処理）
     "allowImportingTsExtensions": true,
+    // import/exportの記述をそのまま出力（変換しない）
     "verbatimModuleSyntax": true,
+    // すべてのファイルをモジュールとして扱う
     "moduleDetection": "force",
+    // JSファイルを出力しない（Viteがトランスパイル）
     "noEmit": true,
 
-    /* Linting */
+    /* Linting - 厳格な型チェックとコード品質向上 */
+    // すべての厳格な型チェックを有効化
     "strict": true,
+    // 未使用のローカル変数を警告
     "noUnusedLocals": true,
+    // 未使用の関数パラメータを警告
     "noUnusedParameters": true,
+    // 実行時に影響しない構文のみ許可（decoratorなど）
     "erasableSyntaxOnly": true,
+    // switch文のフォールスルーを警告
     "noFallthroughCasesInSwitch": true,
+    // 副作用のないimportで未チェックの副作用を警告
     "noUncheckedSideEffectImports": true
   },
+  // src/配下のファイルのみをコンパイル対象にする
   "include": ["src"]
 }

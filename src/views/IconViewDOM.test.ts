@@ -223,4 +223,52 @@ describe('IconViewDOM', () => {
       expect(onUpdate).not.toHaveBeenCalled()
     })
   })
+
+  describe('キーボードショートカット - 貼り付け（空のフォルダ）', () => {
+    it('should make container focusable for empty folders', () => {
+      // フォルダに移動（空のフォルダをシミュレート）
+      const folder = manager.root.children.find(n => n.type === 'folder')
+      expect(folder).toBeTruthy()
+      uiState.navigateToFolder(folder!)
+
+      // DOM再描画（空のフォルダなので子要素なし）
+      createIconViewDOM(container, manager, uiState, onUpdate)
+
+      // コンテナがフォーカス可能になっているべき（tabIndexが設定されている）
+      expect(container.tabIndex).toBeGreaterThanOrEqual(0)
+    })
+
+    it('should paste items in empty folder with Cmd+V', () => {
+      // アイテムをクリップボードに入れる
+      uiState.toggleSelection('file1')
+      uiState.cut()
+      expect(uiState.clipboard.size).toBe(1)
+
+      // フォルダに移動（空のフォルダをシミュレート）
+      const folder = manager.root.children.find(n => n.type === 'folder')
+      expect(folder).toBeTruthy()
+      uiState.navigateToFolder(folder!)
+
+      // DOM再描画（空のフォルダなので子要素なし）
+      createIconViewDOM(container, manager, uiState, onUpdate)
+      onUpdate.mockClear()
+
+      // コンテナ自体にフォーカスを移す
+      container.focus()
+      expect(document.activeElement).toBe(container)
+
+      // Cmd+V キーイベントをディスパッチ
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'v',
+        metaKey: true,
+        bubbles: true
+      })
+      container.dispatchEvent(keyEvent)
+
+      // 貼り付けが実行されるべき
+      expect(onUpdate).toHaveBeenCalled()
+      // クリップボードがクリアされるべき
+      expect(uiState.clipboard.size).toBe(0)
+    })
+  })
 })

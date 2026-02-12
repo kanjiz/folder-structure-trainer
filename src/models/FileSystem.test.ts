@@ -44,6 +44,47 @@ describe('FSNode', () => {
     expect(folder.children).toHaveLength(0)
     expect(file.parent).toBeNull()
   })
+
+  it('should not duplicate child when adding same child twice', () => {
+    const folder = new FSNode('f1', 'A', 'folder')
+    const file = new FSNode('d1', 'test.txt', 'file')
+    folder.addChild(file)
+    folder.addChild(file) // 同じ子を再度追加
+    expect(folder.children).toHaveLength(1)
+    expect(folder.children[0]).toBe(file)
+  })
+
+  it('should throw when creating direct circular reference', () => {
+    const folderA = new FSNode('f1', 'A', 'folder')
+    const folderB = new FSNode('f2', 'B', 'folder')
+    folderA.addChild(folderB)
+    // BにAを追加しようとすると循環参照エラー
+    expect(() => folderB.addChild(folderA)).toThrow('Cannot create circular reference')
+  })
+
+  it('should throw when creating 3-level circular reference', () => {
+    const folderA = new FSNode('f1', 'A', 'folder')
+    const folderB = new FSNode('f2', 'B', 'folder')
+    const folderC = new FSNode('f3', 'C', 'folder')
+    folderA.addChild(folderB)
+    folderB.addChild(folderC)
+    // CにAを追加しようとすると循環参照エラー
+    expect(() => folderC.addChild(folderA)).toThrow('Cannot create circular reference')
+  })
+
+  it('should throw when creating deep circular reference', () => {
+    const folderA = new FSNode('f1', 'A', 'folder')
+    const folderB = new FSNode('f2', 'B', 'folder')
+    const folderC = new FSNode('f3', 'C', 'folder')
+    const folderD = new FSNode('f4', 'D', 'folder')
+    folderA.addChild(folderB)
+    folderB.addChild(folderC)
+    folderC.addChild(folderD)
+    // DにAを追加しようとすると循環参照エラー（4階層）
+    expect(() => folderD.addChild(folderA)).toThrow('Cannot create circular reference')
+    // DにBを追加しようとしても循環参照エラー
+    expect(() => folderD.addChild(folderB)).toThrow('Cannot create circular reference')
+  })
 })
 
 describe('AnswerTreeNode', () => {

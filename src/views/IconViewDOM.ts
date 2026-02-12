@@ -16,6 +16,9 @@ export function createIconViewDOM(
   uiState: UIStateManager,
   onUpdate: () => void
 ): void {
+  // コンテナをフォーカス可能にする（空のフォルダでもキーボードショートカットが使えるように）
+  container.tabIndex = 0
+
   renderIconViewDOM(container, manager, uiState, onUpdate)
   setupKeyboardShortcuts(container, manager, uiState, onUpdate)
   setupContextMenuForEmptyArea(container, uiState, manager, onUpdate)

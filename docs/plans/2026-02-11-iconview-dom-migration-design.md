@@ -12,6 +12,7 @@
 ### 目的
 
 IconViewをDOMベースに移行することで：
+
 - TreeViewやパンくずリストへのドラッグ&ドロップを実現
 - Windows標準の操作（Ctrl+X/V、右クリックメニュー）を容易に実装
 - Windowsエクスプローラーに忠実な操作感を提供し、教育効果を高める
@@ -32,6 +33,7 @@ IconViewをDOMベースに移行することで：
 - ドロップターゲットとして機能
 
 **責任**:
+
 - 現在のフォルダパスを表示
 - パス要素のクリックでナビゲーション
 - ドロップ受付とアイテム移動処理
@@ -41,6 +43,7 @@ IconViewをDOMベースに移行することで：
 FileSystemManagerから分離した責任設計により、データ層とUI層を明確に分離します。
 
 **管理する状態**:
+
 ```typescript
 class UIStateManager {
   clipboard: Set<string>      // 切り取り中のノードID
@@ -50,6 +53,7 @@ class UIStateManager {
 ```
 
 **設計判断の理由**:
+
 - FileSystemManagerはデータ層に専念
 - UI状態とデータ状態を明確に分離
 - 将来の拡張性（問題作成機能など）を考慮
@@ -58,23 +62,26 @@ class UIStateManager {
 ### 既存コンポーネントの変更
 
 #### IconView
+
 - p5.jsからDOM実装へ完全移行
 - CSS Gridでアイコン配置
 - HTML5 Drag and Drop API使用
 
 #### TreeView
+
 - ドロップ受付機能を追加
 - **ドラッグ元にはならない**（仕様として明記）
   - 理由：循環参照の問題を回避、実装をシンプルに保つ
   - 現時点ではこの仕様で十分と判断
 
 #### GameView
+
 - 3つのビュー（Breadcrumb、Tree、Icon）を統合
 - レイアウト変更（Windows準拠）
 
 ### レイアウト構成
 
-```
+```text
 ┌─────────────────────────────────────┐
 │  Desktop > フォルダ1 > フォルダ2     │ ← BreadcrumbView
 ├──────────┬──────────────────────────┤
@@ -102,6 +109,7 @@ class UIStateManager {
 - 選択状態はCSSクラス（`.selected`）で視覚化
 
 **実装方法**:
+
 ```typescript
 // UIStateManager.selection: Set<string>で管理
 function handleItemClick(nodeId: string, event: MouseEvent) {
@@ -127,10 +135,12 @@ function handleItemClick(nodeId: string, event: MouseEvent) {
 ### ドラッグ&ドロップ
 
 #### ドラッグ元
+
 - IconViewのアイテムのみ
 - TreeViewはドラッグ元にならない（仕様）
 
 #### ドロップ先
+
 - IconView内のフォルダ
 - TreeViewのフォルダ
 - BreadcrumbViewのパス要素
@@ -138,6 +148,7 @@ function handleItemClick(nodeId: string, event: MouseEvent) {
 #### 視覚フィードバック
 
 **ドラッグ中のプレビュー**:
+
 - Windows風の半透明プレビュー
 - 複数アイテム選択時は重ねて表示
 - `setDragImage()`で実装
@@ -152,10 +163,12 @@ element.addEventListener('dragstart', (e) => {
 ```
 
 **ドロップターゲットのハイライト**:
+
 - ドロップ可能な場所はホバー時にハイライト
 - ファイルやドロップ不可能な場所はカーソルを「禁止」マークに変更
 
 **アニメーション**:
+
 - CSS transitionでの滑らかなフィードバック
 - ホバー、選択、ドロップ時の視覚効果
 
@@ -190,13 +203,16 @@ element.addEventListener('dragstart', (e) => {
 ### 右クリックメニュー
 
 #### アイテム選択時
+
 - **切り取り**: クリップボードに保存（Ctrl+Xと同等）
 - **貼り付け**: クリップボードから移動（Ctrl+Vと同等）
 
 #### 空白部分を右クリック時
+
 - **貼り付け**: クリップボードから現在のフォルダに移動
 
 **第2段階で追加予定**:
+
 - コピー
 - 削除
 - 名前変更
@@ -209,6 +225,7 @@ Windows準拠の組み合わせアプローチを採用します。
 #### 視覚的にブロック（事前防止）
 
 明らかに無効な操作は実行前に防止：
+
 - ファイルをドロップ先にできない（ホバー時にハイライトしない）
 - カーソルを「禁止」マークに変更
 - ドロップしても何も起きない
@@ -231,6 +248,7 @@ element.addEventListener('dragover', (e) => {
 #### 警告メッセージ表示（実行時エラー）
 
 実行してみないと分からないエラー：
+
 - 貼り付け先が存在しない場合
 - その他のランタイムエラー
 - 「この操作は実行できません」などのメッセージを表示
@@ -240,6 +258,7 @@ element.addEventListener('dragover', (e) => {
 #### 第1段階で実装する範囲
 
 **基本的なキーボード操作**:
+
 - Tab/Shift+Tabでのフォーカス移動（`tabindex`属性）
 - Enter/Spaceでの選択・実行
 - 矢印キーでのアイテム間移動
@@ -298,10 +317,12 @@ function renderTreeNode(node: FSNode): string {
 #### 重複チェック機能
 
 **現状の不具合を修正**:
+
 - 同じ階層に同じ名前のファイル/フォルダを作成できないようにする
 - Windows準拠の挙動を実装
 
 **実装方針**:
+
 - 重複時は「(2)」などの連番を自動付与
 - またはエラーメッセージを表示してユーザーに再入力を促す
 
@@ -316,6 +337,7 @@ function renderTreeNode(node: FSNode): string {
 ### IconViewの実装
 
 **レイアウト**:
+
 ```css
 .icon-view {
   display: grid;
@@ -326,11 +348,13 @@ function renderTreeNode(node: FSNode): string {
 ```
 
 **ドラッグ&ドロップ**:
+
 - HTML5 Drag and Drop API使用
 - `dragstart`, `dragover`, `drop`イベント
 - `setDragImage()`で複数アイテムの半透明プレビュー生成
 
 **選択管理**:
+
 - UIStateManagerの`selection: Set<string>`で管理
 - CSSクラス（`.selected`）で視覚化
 
@@ -354,6 +378,7 @@ function renderBreadcrumb(currentFolder: FSNode, manager: FileSystemManager): st
 ```
 
 各パス部分がドロップターゲットとして機能：
+
 ```typescript
 breadcrumbItem.addEventListener('drop', (e) => {
   const targetDepth = parseInt(e.currentTarget.dataset.depth)
@@ -365,6 +390,7 @@ breadcrumbItem.addEventListener('drop', (e) => {
 ### TreeViewの拡張
 
 既存のDOM実装に以下を追加：
+
 - `dragover`, `drop`イベントリスナー
 - フォルダノードにホバー時、CSSクラスでハイライト表示
 - ドラッグ機能は追加しない（仕様として明記）
@@ -389,33 +415,39 @@ treeItem.addEventListener('drop', (e) => {
 ### テスト項目
 
 #### 基本操作
+
 - 単一/複数アイテムの選択（Ctrl+クリック、Shift+クリック、ドラッグ矩形）
 - ドラッグ&ドロップ（IconView内、TreeViewへ、Breadcrumbへ）
 - 切り取り・貼り付け（Ctrl+X/V、右クリックメニュー）
 - キーボードナビゲーション（Tab, 矢印キー）
 
 #### エラーケース
+
 - ファイルへのドロップ（ブロックされる）
 - 無効な貼り付け（警告表示）
 - Ctrl押下時のドラッグ（「未実装」表示）
 
 #### アクセシビリティ
+
 - キーボードのみでの操作可能性
 - ARIA属性の正確性（スクリーンリーダーでの確認）
 - フォーカス管理の正確性
 
 #### ブラウザ互換性
+
 - Chrome, Firefox, Safari, Edgeでの動作確認
 - ドラッグ&ドロップの挙動確認
 
 ### テスト方法
 
 **手動テスト**:
+
 - 各操作パターンの動作確認
 - スクリーンリーダー（VoiceOver, NVDA）での確認
 - 視覚的なフィードバックの確認
 
 **自動テスト**:
+
 - UIStateManagerの単体テスト
 - FileSystemManager.moveNode()との統合テスト
 
@@ -488,12 +520,14 @@ treeItem.addEventListener('drop', (e) => {
 この設計により、IconViewをp5.jsからDOMベースに移行し、Windows準拠の操作感を実現します。段階的な実装アプローチにより、リスクを最小化しながら、将来の問題作成機能にも対応できる拡張性の高いアーキテクチャを構築します。
 
 **主な利点**:
+
 - Windows標準の操作方法を忠実に再現（教育効果の向上）
 - DOM要素間のシームレスな連携
 - アクセシビリティ対応による幅広いユーザーへの対応
 - 将来の機能拡張に備えた設計
 
 **技術的な判断**:
+
 - UIStateManagerによる責任分離
 - TreeViewはドロップ先のみ（循環参照問題の回避）
 - 段階的な実装（第1段階：移動、第2段階：問題作成）

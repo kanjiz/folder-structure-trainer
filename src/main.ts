@@ -16,7 +16,7 @@ const app = document.querySelector<HTMLDivElement>('#app')!
  * 指定された画面に遷移します
  * @param screen - 遷移先の画面（'select' | 'game' | 'result'）
  */
-function navigateTo(screen: 'select' | 'game' | 'result'): void {
+async function navigateTo(screen: 'select' | 'game' | 'result'): Promise<void> {
   destroyGameView()
   app.innerHTML = ''
 
@@ -42,7 +42,7 @@ function navigateTo(screen: 'select' | 'game' | 'result'): void {
       break
     case 'result':
       if (currentQuestion && lastResult) {
-        renderResultView(
+        await renderResultView(
           app,
           currentQuestion,
           lastResult,

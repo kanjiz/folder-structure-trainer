@@ -26,7 +26,7 @@
 
 ### 全体構成
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │  フロントエンド（共通）                      │
 │  ├─ Templates（Handlebars）              │
@@ -64,7 +64,7 @@ questions.ts          Spreadsheet
 
 ### フロントエンド（現在のsrc/）
 
-```
+```text
 src/
 ├── templates/                    # 新規：Handlebarsテンプレート
 │   ├── SelectView.hbs           # 問題選択画面
@@ -94,7 +94,7 @@ src/
 
 ### GAS（将来）
 
-```
+```text
 gas/
 ├── src/
 │   ├── api.ts                   # APIエンドポイント
@@ -290,17 +290,20 @@ export function isResultSavingEnabled(): boolean {
 
 ### 環境変数ファイル
 
-**.env.development**
+#### .env.development
+
 ```bash
 VITE_ENV=development
 ```
 
-**.env.production**
+#### .env.production
+
 ```bash
 VITE_ENV=github-pages
 ```
 
-**.env.gas**
+#### .env.gas
+
 ```bash
 VITE_ENV=gas
 ```
@@ -399,6 +402,7 @@ export async function renderSelectView(
 **目標**: テンプレートシステムの基盤を構築し、SelectViewで検証
 
 **作業内容:**
+
 1. 依存関係の追加（Handlebars、vite-plugin-handlebars）
 2. ディレクトリ構造の作成
 3. データソース抽象化の実装（インターフェース + StaticDataSource）
@@ -409,6 +413,7 @@ export async function renderSelectView(
 8. 既存テストの修正・追加
 
 **完了条件:**
+
 - `npm run dev` でSelectViewが正常に表示される
 - テンプレート修正 → 自動リロードが動作する
 - 既存テストが全てパスする
@@ -418,22 +423,26 @@ export async function renderSelectView(
 **目標**: 2つ目のビューで汎用性を検証
 
 **作業内容:**
+
 1. ResultView.hbs の作成（セマンティックHTML）
 2. ResultView.ts の修正
 3. テストの修正・追加
 
 **完了条件:**
+
 - ResultViewが正常に動作する
 - SelectView → ゲーム → ResultView の一連の流れが動作する
 
 ### フェーズ3: 他のビュー（将来）
 
 **対象:**
+
 - GameView（最も複雑）
 - TreeView、BreadcrumbView、IconViewDOM
 - ContextMenu
 
 **段階:**
+
 1. シンプルなビュー（BreadcrumbView、ContextMenu）
 2. 中程度のビュー（TreeView、IconViewDOM）
 3. 複雑なビュー（GameView）
@@ -441,6 +450,7 @@ export async function renderSelectView(
 ### フェーズ4: GAS対応（将来）
 
 **作業内容:**
+
 1. GASDataSource の実装
 2. GAS側のAPIエンドポイント作成（Spreadsheet連携）
 3. 認証機能の追加
@@ -540,6 +550,7 @@ describe('GASDataSource', () => {
 ## まとめ
 
 この設計により：
+
 1. **テンプレートとロジックの分離** - 非エンジニアでも編集可能
 2. **セマンティックHTML** - アクセシビリティの向上
 3. **GAS対応の準備** - 将来の本番運用に向けた基盤

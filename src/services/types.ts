@@ -30,7 +30,7 @@ export interface IQuestionDataSource {
    *
    * @param userId - ユーザーID
    * @param questionId - 問題ID
-   * @param result - 結果データ
+   * @param result - 結果データ（構造は環境依存のため型指定なし）
    */
   saveResult?(userId: string, questionId: string, result: unknown): Promise<void>
 }

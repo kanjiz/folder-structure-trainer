@@ -118,6 +118,12 @@ classDiagram
         +renderResultView(container, result, onRetry, onBack): void
     }
 
+    class TemplateLoader {
+        <<module>>
+        +loadTemplate(name: string): HandlebarsTemplateDelegate
+        +clearTemplateCache(): void
+    }
+
     %% 関係
     FSNode --o FSNode : parent/children
     FileSystemManager *-- FSNode : root
@@ -144,7 +150,9 @@ classDiagram
     IconViewDOM ..> UIStateManager : manages
     IconViewDOM ..> ContextMenu : uses
     SelectView ..> Question : selects
+    SelectView ..> TemplateLoader : uses
     ResultView ..> CheckResult : displays
+    ResultView ..> TemplateLoader : uses
 ```
 
 ## 主要コンポーネント
@@ -164,8 +172,15 @@ classDiagram
 - **TreeView**: フォルダ構造のツリー表示（ドロップ先として機能）
 - **IconViewDOM**: DOM ベースのアイコンビュー（ドラッグ&ドロップ、複数選択、キーボードショートカット対応）
 - **ContextMenu**: 右クリックメニュー（切り取り、貼り付け）
-- **SelectView**: 問題選択画面
-- **ResultView**: 答え合わせ結果の表示
+- **SelectView**: 問題選択画面（Handlebars テンプレート使用）
+- **ResultView**: 答え合わせ結果の表示（Handlebars テンプレート使用）
+
+### ユーティリティ層
+
+- **TemplateLoader**: Handlebars テンプレートの読み込みとコンパイル
+  - テンプレートファイル（`.hbs`）を動的に読み込み
+  - コンパイル結果をキャッシュして再利用
+  - SelectView と ResultView が HTML 生成に使用
 
 ## フォーカス管理戦略（IconViewDOM）
 

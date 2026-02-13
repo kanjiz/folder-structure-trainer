@@ -1,0 +1,30 @@
+const n=`<main class="result-view" role="main">
+  <header class="result-view__header">
+    <h2>結果</h2>
+  </header>
+
+  <section class="result-view__score" aria-label="スコア">
+    <p class="score">{{score}} / {{total}} 正解</p>
+  </section>
+
+  <section class="result-view__items" aria-label="詳細結果">
+    <ul class="result-items" role="list">
+      {{#each items}}
+        <li class="result-item {{cssClass}}" role="listitem" aria-label="{{status}}: {{name}}">
+          <span aria-hidden="true">{{mark}}</span>
+          <span>{{name}}</span>
+        </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <footer class="result-actions">
+    <button id="retry-btn" class="btn-primary" type="button">
+      もう一度
+    </button>
+    <button id="select-btn" class="btn-secondary" type="button">
+      問題選択に戻る
+    </button>
+  </footer>
+</main>
+`;export{n as default};

@@ -39,7 +39,7 @@ describe('ResultView', () => {
   })
 
   describe('スコア表示', () => {
-    it('should display correct score when all items are correct', async () => {
+    it('全問正解時に正しいスコアを表示する', async () => {
       const result = {
         correct: ['file1', 'file2', 'file3', 'folder1', 'folder2'],
         incorrect: []
@@ -51,7 +51,7 @@ describe('ResultView', () => {
       expect(scoreElement?.textContent).toBe('5 / 5 正解')
     })
 
-    it('should display correct score when some items are incorrect', async () => {
+    it('一部不正解時に正しいスコアを表示する', async () => {
       const result = {
         correct: ['file1', 'file2', 'folder1'],
         incorrect: ['file3', 'folder2']
@@ -63,7 +63,7 @@ describe('ResultView', () => {
       expect(scoreElement?.textContent).toBe('3 / 5 正解')
     })
 
-    it('should display correct score when all items are incorrect', async () => {
+    it('全問不正解時に正しいスコアを表示する', async () => {
       const result = {
         correct: [],
         incorrect: ['file1', 'file2', 'file3', 'folder1', 'folder2']
@@ -77,7 +77,7 @@ describe('ResultView', () => {
   })
 
   describe('正誤表示', () => {
-    it('should mark correct items with check mark', async () => {
+    it('正解アイテムにチェックマークを表示する', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
@@ -91,7 +91,7 @@ describe('ResultView', () => {
       expect(correctItems[0].textContent).toContain('ファイル1.txt')
     })
 
-    it('should mark incorrect items with X mark', async () => {
+    it('不正解アイテムにバツマークを表示する', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
@@ -104,7 +104,7 @@ describe('ResultView', () => {
       expect(incorrectItems[0].textContent).toContain('✗')
     })
 
-    it('should display all items in order', async () => {
+    it('全てのアイテムを順序通りに表示する', async () => {
       const result = {
         correct: ['file1', 'folder1'],
         incorrect: ['file2', 'file3', 'folder2']
@@ -123,7 +123,7 @@ describe('ResultView', () => {
   })
 
   describe('ボタンイベント', () => {
-    it('should call onRetry when retry button is clicked', async () => {
+    it('もう一度ボタンをクリックするとonRetryが呼ばれる', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
@@ -138,7 +138,7 @@ describe('ResultView', () => {
       expect(onRetry).toHaveBeenCalledTimes(1)
     })
 
-    it('should call onBackToSelect when select button is clicked', async () => {
+    it('問題選択に戻るボタンをクリックするとonBackToSelectが呼ばれる', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
@@ -155,7 +155,7 @@ describe('ResultView', () => {
   })
 
   describe('セマンティック構造', () => {
-    it('should render semantic HTML structure', async () => {
+    it('セマンティックなHTML構造をレンダリングする', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
@@ -193,7 +193,7 @@ describe('ResultView', () => {
       expect(footer).toBeTruthy()
     })
 
-    it('should have proper button types', async () => {
+    it('ボタンに適切なtype属性を設定する', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
@@ -208,7 +208,7 @@ describe('ResultView', () => {
       expect(selectButton.type).toBe('button')
     })
 
-    it('should hide decorative marks from screen readers', async () => {
+    it('装飾マークをスクリーンリーダーから隠す', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
@@ -223,7 +223,7 @@ describe('ResultView', () => {
       })
     })
 
-    it('should provide accessible labels for result items', async () => {
+    it('結果アイテムにアクセシブルなラベルを提供する', async () => {
       const result = {
         correct: ['file1', 'folder1'],
         incorrect: ['file2', 'file3', 'folder2']

@@ -2,6 +2,15 @@ import type { Question } from '../models/FileSystem'
 import { loadTemplate } from '../utils/templateLoader'
 
 /**
+ * 結果アイテムの表示状態
+ */
+type ResultStatus = {
+  readonly cssClass: string
+  readonly mark: string
+  readonly status: string
+}
+
+/**
  * 結果画面をレンダリングします
  *
  * Handlebarsテンプレートを使用してHTMLを生成します。
@@ -26,19 +35,22 @@ export async function renderResultView(
   const total = result.correct.length + result.incorrect.length
   const score = result.correct.length
 
-  // ステータス定義
-  const STATUS_CONFIG = {
+  /**
+   * 結果アイテムの表示状態定義
+   * 正解・不正解それぞれのCSSクラス、マーク、ステータステキストを定義
+   */
+  const STATUS_CONFIG: Record<'correct' | 'incorrect', ResultStatus> = {
     correct: {
       cssClass: 'result-correct',
-      mark: '\u2713',
+      mark: '\u2713', // ✓ チェックマーク
       status: '正解'
     },
     incorrect: {
       cssClass: 'result-incorrect',
-      mark: '\u2717',
+      mark: '\u2717', // ✗ バツマーク
       status: '不正解'
     }
-  } as const
+  }
 
   // テンプレートデータを準備
   const templateData = {

@@ -39,37 +39,37 @@ describe('ResultView', () => {
   })
 
   describe('スコア表示', () => {
-    it('should display correct score when all items are correct', () => {
+    it('should display correct score when all items are correct', async () => {
       const result = {
         correct: ['file1', 'file2', 'file3', 'folder1', 'folder2'],
         incorrect: []
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('5 / 5 正解')
     })
 
-    it('should display correct score when some items are incorrect', () => {
+    it('should display correct score when some items are incorrect', async () => {
       const result = {
         correct: ['file1', 'file2', 'folder1'],
         incorrect: ['file3', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('3 / 5 正解')
     })
 
-    it('should display correct score when all items are incorrect', () => {
+    it('should display correct score when all items are incorrect', async () => {
       const result = {
         correct: [],
         incorrect: ['file1', 'file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('0 / 5 正解')
@@ -77,13 +77,13 @@ describe('ResultView', () => {
   })
 
   describe('正誤表示', () => {
-    it('should mark correct items with check mark', () => {
+    it('should mark correct items with check mark', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const correctItems = container.querySelectorAll('.result-correct')
       expect(correctItems).toHaveLength(1)
@@ -91,26 +91,26 @@ describe('ResultView', () => {
       expect(correctItems[0].textContent).toContain('ファイル1.txt')
     })
 
-    it('should mark incorrect items with X mark', () => {
+    it('should mark incorrect items with X mark', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const incorrectItems = container.querySelectorAll('.result-incorrect')
       expect(incorrectItems).toHaveLength(4)
       expect(incorrectItems[0].textContent).toContain('✗')
     })
 
-    it('should display all items in order', () => {
+    it('should display all items in order', async () => {
       const result = {
         correct: ['file1', 'folder1'],
         incorrect: ['file2', 'file3', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const allResultItems = container.querySelectorAll('.result-item')
       expect(allResultItems).toHaveLength(5)
@@ -123,13 +123,13 @@ describe('ResultView', () => {
   })
 
   describe('ボタンイベント', () => {
-    it('should call onRetry when retry button is clicked', () => {
+    it('should call onRetry when retry button is clicked', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const retryButton = container.querySelector('#retry-btn') as HTMLButtonElement
       expect(retryButton).toBeTruthy()
@@ -138,13 +138,13 @@ describe('ResultView', () => {
       expect(onRetry).toHaveBeenCalledTimes(1)
     })
 
-    it('should call onBackToSelect when select button is clicked', () => {
+    it('should call onBackToSelect when select button is clicked', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const selectButton = container.querySelector('#select-btn') as HTMLButtonElement
       expect(selectButton).toBeTruthy()

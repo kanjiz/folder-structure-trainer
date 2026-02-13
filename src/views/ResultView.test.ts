@@ -153,4 +153,74 @@ describe('ResultView', () => {
       expect(onBackToSelect).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('セマンティック構造', () => {
+    it('should render semantic HTML structure', async () => {
+      const result = {
+        correct: ['file1'],
+        incorrect: ['file2', 'file3', 'folder1', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      // main要素
+      const main = container.querySelector('main[role="main"]')
+      expect(main).toBeTruthy()
+      expect(main?.className).toBe('result-view')
+
+      // header要素
+      const header = container.querySelector('header.result-view__header')
+      expect(header).toBeTruthy()
+
+      // section要素（スコア）
+      const scoreSection = container.querySelector('section[aria-label="スコア"]')
+      expect(scoreSection).toBeTruthy()
+
+      // section要素（詳細結果）
+      const itemsSection = container.querySelector('section[aria-label="詳細結果"]')
+      expect(itemsSection).toBeTruthy()
+
+      // ul要素
+      const list = container.querySelector('ul[role="list"]')
+      expect(list).toBeTruthy()
+
+      // li要素
+      const listItems = container.querySelectorAll('li[role="listitem"]')
+      expect(listItems.length).toBe(5)
+
+      // footer要素
+      const footer = container.querySelector('footer.result-actions')
+      expect(footer).toBeTruthy()
+    })
+
+    it('should have proper button types', async () => {
+      const result = {
+        correct: ['file1'],
+        incorrect: ['file2', 'file3', 'folder1', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      const retryButton = container.querySelector('#retry-btn') as HTMLButtonElement
+      expect(retryButton.type).toBe('button')
+
+      const selectButton = container.querySelector('#select-btn') as HTMLButtonElement
+      expect(selectButton.type).toBe('button')
+    })
+
+    it('should hide decorative marks from screen readers', async () => {
+      const result = {
+        correct: ['file1'],
+        incorrect: ['file2', 'file3', 'folder1', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      const resultItems = container.querySelectorAll('.result-item')
+      resultItems.forEach(item => {
+        const mark = item.querySelector('span[aria-hidden="true"]')
+        expect(mark).toBeTruthy()
+      })
+    })
+  })
 })

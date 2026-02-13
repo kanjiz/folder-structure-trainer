@@ -39,37 +39,37 @@ describe('ResultView', () => {
   })
 
   describe('スコア表示', () => {
-    it('should display correct score when all items are correct', () => {
+    it('全問正解時に正しいスコアを表示する', async () => {
       const result = {
         correct: ['file1', 'file2', 'file3', 'folder1', 'folder2'],
         incorrect: []
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('5 / 5 正解')
     })
 
-    it('should display correct score when some items are incorrect', () => {
+    it('一部不正解時に正しいスコアを表示する', async () => {
       const result = {
         correct: ['file1', 'file2', 'folder1'],
         incorrect: ['file3', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('3 / 5 正解')
     })
 
-    it('should display correct score when all items are incorrect', () => {
+    it('全問不正解時に正しいスコアを表示する', async () => {
       const result = {
         correct: [],
         incorrect: ['file1', 'file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('0 / 5 正解')
@@ -77,13 +77,13 @@ describe('ResultView', () => {
   })
 
   describe('正誤表示', () => {
-    it('should mark correct items with check mark', () => {
+    it('正解アイテムにチェックマークを表示する', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const correctItems = container.querySelectorAll('.result-correct')
       expect(correctItems).toHaveLength(1)
@@ -91,26 +91,26 @@ describe('ResultView', () => {
       expect(correctItems[0].textContent).toContain('ファイル1.txt')
     })
 
-    it('should mark incorrect items with X mark', () => {
+    it('不正解アイテムにバツマークを表示する', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const incorrectItems = container.querySelectorAll('.result-incorrect')
       expect(incorrectItems).toHaveLength(4)
       expect(incorrectItems[0].textContent).toContain('✗')
     })
 
-    it('should display all items in order', () => {
+    it('全てのアイテムを順序通りに表示する', async () => {
       const result = {
         correct: ['file1', 'folder1'],
         incorrect: ['file2', 'file3', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const allResultItems = container.querySelectorAll('.result-item')
       expect(allResultItems).toHaveLength(5)
@@ -123,13 +123,13 @@ describe('ResultView', () => {
   })
 
   describe('ボタンイベント', () => {
-    it('should call onRetry when retry button is clicked', () => {
+    it('もう一度ボタンをクリックするとonRetryが呼ばれる', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const retryButton = container.querySelector('#retry-btn') as HTMLButtonElement
       expect(retryButton).toBeTruthy()
@@ -138,19 +138,112 @@ describe('ResultView', () => {
       expect(onRetry).toHaveBeenCalledTimes(1)
     })
 
-    it('should call onBackToSelect when select button is clicked', () => {
+    it('問題選択に戻るボタンをクリックするとonBackToSelectが呼ばれる', async () => {
       const result = {
         correct: ['file1'],
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const selectButton = container.querySelector('#select-btn') as HTMLButtonElement
       expect(selectButton).toBeTruthy()
 
       selectButton.click()
       expect(onBackToSelect).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('セマンティック構造', () => {
+    it('セマンティックなHTML構造をレンダリングする', async () => {
+      const result = {
+        correct: ['file1'],
+        incorrect: ['file2', 'file3', 'folder1', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      // main要素
+      const main = container.querySelector('main[role="main"]')
+      expect(main).toBeTruthy()
+      expect(main?.className).toBe('result-view')
+
+      // header要素
+      const header = container.querySelector('header.result-view__header')
+      expect(header).toBeTruthy()
+
+      // section要素（スコア）
+      const scoreSection = container.querySelector('section[aria-label="スコア"]')
+      expect(scoreSection).toBeTruthy()
+
+      // section要素（詳細結果）
+      const itemsSection = container.querySelector('section[aria-label="詳細結果"]')
+      expect(itemsSection).toBeTruthy()
+
+      // ul要素
+      const list = container.querySelector('ul[role="list"]')
+      expect(list).toBeTruthy()
+
+      // li要素
+      const listItems = container.querySelectorAll('li[role="listitem"]')
+      expect(listItems.length).toBe(5)
+
+      // footer要素
+      const footer = container.querySelector('footer.result-actions')
+      expect(footer).toBeTruthy()
+    })
+
+    it('ボタンに適切なtype属性を設定する', async () => {
+      const result = {
+        correct: ['file1'],
+        incorrect: ['file2', 'file3', 'folder1', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      const retryButton = container.querySelector('#retry-btn') as HTMLButtonElement
+      expect(retryButton.type).toBe('button')
+
+      const selectButton = container.querySelector('#select-btn') as HTMLButtonElement
+      expect(selectButton.type).toBe('button')
+    })
+
+    it('装飾マークをスクリーンリーダーから隠す', async () => {
+      const result = {
+        correct: ['file1'],
+        incorrect: ['file2', 'file3', 'folder1', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      const resultItems = container.querySelectorAll('.result-item')
+      resultItems.forEach(item => {
+        const mark = item.querySelector('span[aria-hidden="true"]')
+        expect(mark).toBeTruthy()
+      })
+    })
+
+    it('結果アイテムにアクセシブルなラベルを提供する', async () => {
+      const result = {
+        correct: ['file1', 'folder1'],
+        incorrect: ['file2', 'file3', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      const resultItems = container.querySelectorAll('.result-item')
+
+      // 正解アイテムのaria-label確認
+      const correctItem = Array.from(resultItems).find(item =>
+        item.textContent?.includes('ファイル1.txt')
+      )
+      expect(correctItem?.getAttribute('aria-label')).toBe('正解: ファイル1.txt')
+
+      // 不正解アイテムのaria-label確認
+      const incorrectItem = Array.from(resultItems).find(item =>
+        item.textContent?.includes('ファイル2.txt')
+      )
+      expect(incorrectItem?.getAttribute('aria-label')).toBe('不正解: ファイル2.txt')
     })
   })
 })

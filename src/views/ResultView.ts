@@ -1,45 +1,89 @@
 import type { Question } from '../models/FileSystem'
+import { loadTemplate } from '../utils/templateLoader'
+
+/** チェックマーク（✓） */
+const CHECK_MARK = '\u2713'
+
+/** バツマーク（✗） */
+const CROSS_MARK = '\u2717'
+
+/**
+ * 結果アイテムの表示状態
+ */
+type ResultStatus = {
+  readonly cssClass: string
+  readonly mark: string
+  readonly status: string
+}
 
 /**
  * 結果画面をレンダリングします
+ *
+ * Handlebarsテンプレートを使用してHTMLを生成します。
+ *
  * @param container - レンダリング先のコンテナ要素
  * @param question - 実施した問題データ
  * @param result - 答え合わせの結果（正解・不正解のIDリスト）
  * @param onBackToSelect - 問題選択に戻るボタンのコールバック
  * @param onRetry - もう一度ボタンのコールバック
  */
-export function renderResultView(
+export async function renderResultView(
   container: HTMLElement,
   question: Question,
   result: { correct: string[]; incorrect: string[] },
   onBackToSelect: () => void,
   onRetry: () => void,
-): void {
+): Promise<void> {
+  // テンプレートを読み込み
+  const template = await loadTemplate('ResultView')
+
+  // スコア計算
   const total = result.correct.length + result.incorrect.length
   const score = result.correct.length
 
-  const wrapper = document.createElement('div')
-  wrapper.className = 'result-view'
+  /**
+   * 結果アイテムの表示状態定義
+   * 正解・不正解それぞれのCSSクラス、マーク、ステータステキストを定義
+   */
+  const STATUS_CONFIG: Record<'correct' | 'incorrect', ResultStatus> = {
+    correct: {
+      cssClass: 'result-correct',
+      mark: CHECK_MARK,
+      status: '正解'
+    },
+    incorrect: {
+      cssClass: 'result-incorrect',
+      mark: CROSS_MARK,
+      status: '不正解'
+    }
+  }
 
-  wrapper.innerHTML = `
-    <h2>結果</h2>
-    <p class="score">${score} / ${total} 正解</p>
-    <div class="result-items">
-      ${question.items.map(item => {
-        const isCorrect = result.correct.includes(item.id)
-        const cls = isCorrect ? 'result-correct' : 'result-incorrect'
-        const mark = isCorrect ? '\u2713' : '\u2717'
-        return `<div class="result-item ${cls}"><span>${mark}</span> ${item.name}</div>`
-      }).join('')}
-    </div>
-    <div class="result-actions">
-      <button id="retry-btn" class="btn-primary">もう一度</button>
-      <button id="select-btn" class="btn-secondary">問題選択に戻る</button>
-    </div>
-  `
+  // テンプレートデータを準備
+  const templateData = {
+    score,
+    total,
+    items: question.items.map(item => {
+      const isCorrect = result.correct.includes(item.id)
+      const statusData = isCorrect ? STATUS_CONFIG.correct : STATUS_CONFIG.incorrect
+      return {
+        name: item.name,
+        ...statusData
+      }
+    })
+  }
 
-  container.appendChild(wrapper)
+  // HTMLを生成してコンテナに挿入
+  const html = template(templateData)
+  container.innerHTML = html
 
-  wrapper.querySelector('#retry-btn')!.addEventListener('click', onRetry)
-  wrapper.querySelector('#select-btn')!.addEventListener('click', onBackToSelect)
+  // イベントリスナーを設定
+  const retryBtn = container.querySelector('#retry-btn')
+  const selectBtn = container.querySelector('#select-btn')
+
+  if (retryBtn) {
+    retryBtn.addEventListener('click', onRetry)
+  }
+  if (selectBtn) {
+    selectBtn.addEventListener('click', onBackToSelect)
+  }
 }

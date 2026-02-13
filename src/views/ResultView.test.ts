@@ -222,5 +222,28 @@ describe('ResultView', () => {
         expect(mark).toBeTruthy()
       })
     })
+
+    it('should provide accessible labels for result items', async () => {
+      const result = {
+        correct: ['file1', 'folder1'],
+        incorrect: ['file2', 'file3', 'folder2']
+      }
+
+      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+
+      const resultItems = container.querySelectorAll('.result-item')
+
+      // 正解アイテムのaria-label確認
+      const correctItem = Array.from(resultItems).find(item =>
+        item.textContent?.includes('ファイル1.txt')
+      )
+      expect(correctItem?.getAttribute('aria-label')).toBe('正解: ファイル1.txt')
+
+      // 不正解アイテムのaria-label確認
+      const incorrectItem = Array.from(resultItems).find(item =>
+        item.textContent?.includes('ファイル2.txt')
+      )
+      expect(incorrectItem?.getAttribute('aria-label')).toBe('不正解: ファイル2.txt')
+    })
   })
 })

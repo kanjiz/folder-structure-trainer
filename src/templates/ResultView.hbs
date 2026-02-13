@@ -10,7 +10,7 @@
   <section class="result-view__items" aria-label="詳細結果">
     <ul class="result-items" role="list">
       {{#each items}}
-        <li class="result-item {{cssClass}}" role="listitem">
+        <li class="result-item {{cssClass}}" role="listitem" aria-label="{{status}}: {{name}}">
           <span aria-hidden="true">{{mark}}</span>
           <span>{{name}}</span>
         </li>

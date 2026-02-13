@@ -26,16 +26,30 @@ export async function renderResultView(
   const total = result.correct.length + result.incorrect.length
   const score = result.correct.length
 
+  // ステータス定義
+  const STATUS_CONFIG = {
+    correct: {
+      cssClass: 'result-correct',
+      mark: '\u2713',
+      status: '正解'
+    },
+    incorrect: {
+      cssClass: 'result-incorrect',
+      mark: '\u2717',
+      status: '不正解'
+    }
+  } as const
+
   // テンプレートデータを準備
   const templateData = {
     score,
     total,
     items: question.items.map(item => {
       const isCorrect = result.correct.includes(item.id)
+      const statusData = isCorrect ? STATUS_CONFIG.correct : STATUS_CONFIG.incorrect
       return {
         name: item.name,
-        cssClass: isCorrect ? 'result-correct' : 'result-incorrect',
-        mark: isCorrect ? '\u2713' : '\u2717'
+        ...statusData
       }
     })
   }

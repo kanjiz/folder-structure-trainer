@@ -1,6 +1,12 @@
 import type { Question } from '../models/FileSystem'
 import { loadTemplate } from '../utils/templateLoader'
 
+/** チェックマーク（✓） */
+const CHECK_MARK = '\u2713'
+
+/** バツマーク（✗） */
+const CROSS_MARK = '\u2717'
+
 /**
  * 結果アイテムの表示状態
  */
@@ -42,12 +48,12 @@ export async function renderResultView(
   const STATUS_CONFIG: Record<'correct' | 'incorrect', ResultStatus> = {
     correct: {
       cssClass: 'result-correct',
-      mark: '\u2713', // ✓ チェックマーク
+      mark: CHECK_MARK,
       status: '正解'
     },
     incorrect: {
       cssClass: 'result-incorrect',
-      mark: '\u2717', // ✗ バツマーク
+      mark: CROSS_MARK,
       status: '不正解'
     }
   }

@@ -4,7 +4,7 @@ import { loadTemplate } from '../utils/templateLoader'
 /**
  * 結果画面をレンダリングします
  *
- * Handlebarsテンプレートを使用してセマンティックHTMLを生成します。
+ * Handlebarsテンプレートを使用してHTMLを生成します。
  *
  * @param container - レンダリング先のコンテナ要素
  * @param question - 実施した問題データ

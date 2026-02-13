@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { loadTemplate, clearTemplateCache } from './templateLoader'
+import { clearTemplateCache } from './templateLoader'
 
 describe('templateLoader', () => {
   beforeEach(() => {

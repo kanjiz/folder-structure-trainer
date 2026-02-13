@@ -30,12 +30,18 @@ body {
 }
 
 .question-list {
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+.question-list__item {
+  width: 100%;
+}
+
 .question-card {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 12px;

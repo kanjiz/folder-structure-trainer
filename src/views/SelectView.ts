@@ -1,35 +1,44 @@
 import type { Question } from '../models/FileSystem'
+import { loadTemplate } from '../utils/templateLoader'
 
 /**
  * 問題選択画面をレンダリングします
+ *
+ * Handlebarsテンプレートを使用してセマンティックHTMLを生成します。
+ *
  * @param container - レンダリング先のコンテナ要素
  * @param questions - 表示する問題のリスト
  * @param onSelect - 問題選択時のコールバック
  */
-export function renderSelectView(
+export async function renderSelectView(
   container: HTMLElement,
   questions: Question[],
   onSelect: (question: Question) => void,
-): void {
-  const wrapper = document.createElement('div')
-  wrapper.className = 'select-view'
-  wrapper.innerHTML = `<h1>フォルダ構造トレーナー</h1><p>問題を選んでください</p>`
+): Promise<void> {
+  // テンプレートを読み込み
+  const template = await loadTemplate('SelectView')
 
-  const list = document.createElement('div')
-  list.className = 'question-list'
-
-  for (const q of questions) {
-    const card = document.createElement('button')
-    card.className = 'question-card'
-    const modeLabel = q.mode === 'practice' ? '練習' : '演習'
-    card.innerHTML = `
-      <span class="mode-badge mode-${q.mode}">${modeLabel}</span>
-      <span class="question-title">${q.title}</span>
-    `
-    card.addEventListener('click', () => onSelect(q))
-    list.appendChild(card)
+  // テンプレートデータを準備
+  const templateData = {
+    questions: questions.map(q => ({
+      id: q.id,
+      title: q.title,
+      mode: q.mode,
+      modeLabel: q.mode === 'practice' ? '練習' : '演習'
+    }))
   }
 
-  wrapper.appendChild(list)
-  container.appendChild(wrapper)
+  // HTMLを生成してコンテナに挿入
+  const html = template(templateData)
+  container.innerHTML = html
+
+  // イベントリスナーを設定
+  const buttons = container.querySelectorAll('[data-question-id]')
+  buttons.forEach((button) => {
+    const questionId = button.getAttribute('data-question-id')
+    const question = questions.find(q => q.id === questionId)
+    if (question) {
+      button.addEventListener('click', () => onSelect(question))
+    }
+  })
 }

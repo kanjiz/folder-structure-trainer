@@ -81,4 +81,57 @@ export const questions: Question[] = [
       }
     },
   },
+  {
+    id: 'q003',
+    title: 'シンプルな整理（練習）',
+    mode: 'practice',
+    instructions: [
+      '「ファイルx」を「フォルダa」に入れてください',
+      '「フォルダb」は空のままにしてください',
+    ],
+    items: [
+      { id: 'fa', name: 'フォルダa', type: 'folder' },
+      { id: 'fb', name: 'フォルダb', type: 'folder' },
+      { id: 'fx', name: 'ファイルx', type: 'file' },
+    ],
+    answer: {
+      'フォルダa': {
+        type: 'folder',
+        children: {
+          'ファイルx': { type: 'file' }
+        }
+      },
+      'フォルダb': {
+        type: 'folder',
+        children: {}
+      }
+    }
+  },
+  {
+    id: 'q004',
+    title: 'シンプルな整理（演習）',
+    mode: 'exercise',
+    instructions: [
+      '以下のファイルを正しいフォルダに整理してください',
+      '「ファイルx」を「フォルダa」に入れてください',
+      '「フォルダb」は空のままにしてください',
+    ],
+    items: [
+      { id: 'fa', name: 'フォルダa', type: 'folder' },
+      { id: 'fb', name: 'フォルダb', type: 'folder' },
+      { id: 'fx', name: 'ファイルx', type: 'file' },
+    ],
+    answer: {
+      'フォルダa': {
+        type: 'folder',
+        children: {
+          'ファイルx': { type: 'file' }
+        }
+      },
+      'フォルダb': {
+        type: 'folder',
+        children: {}
+      }
+    }
+  },
 ]

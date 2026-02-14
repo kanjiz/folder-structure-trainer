@@ -3,6 +3,8 @@
  * 右クリックメニューの表示・非表示を管理
  */
 
+import { loadTemplate } from '../utils/templateLoader'
+
 let currentMenu: HTMLElement | null = null
 
 export interface ContextMenuOptions {
@@ -20,32 +22,30 @@ export interface ContextMenuItem {
 /**
  * コンテキストメニューを表示
  */
-export function showContextMenu(options: ContextMenuOptions): void {
+export async function showContextMenu(options: ContextMenuOptions): Promise<void> {
   // 既存のメニューがあれば削除
   hideContextMenu()
 
-  const menu = document.createElement('div')
-  menu.className = 'context-menu'
+  // テンプレートを読み込み
+  const template = await loadTemplate('ContextMenu')
+  const menuHtml = template({ items: options.items })
+
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = menuHtml
+  const menu = tempDiv.firstElementChild as HTMLElement
+
   menu.style.left = `${options.x}px`
   menu.style.top = `${options.y}px`
 
-  options.items.forEach(item => {
-    const menuItem = document.createElement('div')
-    menuItem.className = 'context-menu-item'
-    if (item.disabled) {
-      menuItem.classList.add('disabled')
-    }
-    menuItem.textContent = item.label
-
-    menuItem.addEventListener('click', (e) => {
-      e.stopPropagation()
-      if (!item.disabled) {
-        item.onClick()
+  // イベントリスナー設定
+  menu.querySelectorAll('.context-menu-item').forEach((item, index) => {
+    if (!options.items[index].disabled) {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation()
+        options.items[index].onClick()
         hideContextMenu()
-      }
-    })
-
-    menu.appendChild(menuItem)
+      })
+    }
   })
 
   document.body.appendChild(menu)

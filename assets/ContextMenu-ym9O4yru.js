@@ -1,0 +1,14 @@
+const n=`<nav class="context-menu" role="menu" aria-label="コンテキストメニュー">
+  {{#each items}}
+    <button
+      type="button"
+      class="context-menu-item {{#if disabled}}disabled{{/if}}"
+      role="menuitem"
+      {{#if disabled}}aria-disabled="true"{{/if}}
+      data-index="{{@index}}"
+    >
+      {{label}}
+    </button>
+  {{/each}}
+</nav>
+`;export{n as default};

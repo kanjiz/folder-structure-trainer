@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { FSNode } from './FileSystem'
-import type { AnswerTreeNode, AnswerTree } from './FileSystem'
+import type { AnswerNode, AnswerTree } from './types'
 
 describe('FSNode', () => {
   it('should create a folder node', () => {
@@ -93,15 +93,15 @@ describe('FSNode', () => {
   })
 })
 
-describe('AnswerTreeNode', () => {
+describe('AnswerNode', () => {
   it('should create a file node', () => {
-    const fileNode: AnswerTreeNode = { type: 'file' }
+    const fileNode: AnswerNode = { type: 'file' }
     expect(fileNode.type).toBe('file')
     expect(fileNode.children).toBeUndefined()
   })
 
   it('should create a folder node with children', () => {
-    const folderNode: AnswerTreeNode = {
+    const folderNode: AnswerNode = {
       type: 'folder',
       children: {
         'test.txt': { type: 'file' }

@@ -1,4 +1,4 @@
-import type { ItemType, AnswerTree } from './types'
+import type { ItemType } from './types'
 
 /**
  * ファイルシステムのノードを表すクラス

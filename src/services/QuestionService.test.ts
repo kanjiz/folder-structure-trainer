@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { QuestionService } from './QuestionService'
 import type { IQuestionDataSource } from './types'
-import type { Question } from '../models/FileSystem'
+import type { Question } from '../models/types'
 
 /**
  * モックのデータソースを作成

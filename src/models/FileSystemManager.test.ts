@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { FileSystemManager } from './FileSystemManager'
-import type { Question } from './FileSystem'
+import type { Question } from './types'
 
 const sampleQuestion: Question = {
   id: 'q001',

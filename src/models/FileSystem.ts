@@ -241,6 +241,7 @@ export class FSNode {
    */
   addChild(child: FSNode): void {
     if (this.type !== 'folder') throw new Error('Cannot add child to a file')
+    if (child === this) throw new Error('Cannot create circular reference')
     if (child.parent === this) return  // 既に自分の子なら何もしない
 
     // 循環参照チェック：childが自分の祖先でないか確認

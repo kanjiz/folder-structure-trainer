@@ -85,6 +85,12 @@ describe('FSNode', () => {
     // DにBを追加しようとしても循環参照エラー
     expect(() => folderD.addChild(folderB)).toThrow('Cannot create circular reference')
   })
+
+  it('should throw when adding self as child', () => {
+    const folder = new FSNode('f1', 'Folder', 'folder')
+    // 自分自身を子として追加しようとすると循環参照エラー
+    expect(() => folder.addChild(folder)).toThrow('Cannot create circular reference')
+  })
 })
 
 describe('AnswerTreeNode', () => {

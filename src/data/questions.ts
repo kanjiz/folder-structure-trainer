@@ -1,4 +1,4 @@
-import type { Question } from '../models/FileSystem'
+import type { Question } from '../models/types'
 
 /**
  * フォルダ構造トレーニングの問題データ配列

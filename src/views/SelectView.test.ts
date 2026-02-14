@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderSelectView } from './SelectView'
-import type { Question } from '../models/FileSystem'
+import type { Question } from '../models/types'
 
 describe('SelectView', () => {
   let container: HTMLElement

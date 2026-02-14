@@ -1,5 +1,5 @@
 import { questions } from './data/questions'
-import type { Question } from './models/FileSystem'
+import type { Question } from './models/types'
 import { renderSelectView } from './views/SelectView'
 import { renderGameView, destroyGameView } from './views/GameView'
 import { renderResultView } from './views/ResultView'

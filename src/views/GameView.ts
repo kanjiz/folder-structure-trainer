@@ -1,4 +1,5 @@
-import type { Question, FSNode } from '../models/FileSystem'
+import type { Question } from '../models/types'
+import type { FSNode } from '../models/FileSystem'
 import { FileSystemManager } from '../models/FileSystemManager'
 import { UIStateManager } from '../models/UIStateManager'
 import { renderTreeView, updateTreeView } from './TreeView'

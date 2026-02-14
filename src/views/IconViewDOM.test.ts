@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createIconViewDOM } from './IconViewDOM'
 import { FileSystemManager } from '../models/FileSystemManager'
 import { UIStateManager } from '../models/UIStateManager'
-import type { Question } from '../models/FileSystem'
+import type { Question } from '../models/types'
 
 describe('IconViewDOM', () => {
   let container: HTMLElement

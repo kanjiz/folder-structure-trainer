@@ -1,5 +1,5 @@
-import type { AnswerTree, Question } from './FileSystem'
 import { FSNode } from './FileSystem'
+import type { AnswerTree, Question } from './types'
 
 /**
  * ファイルシステムの状態を管理するクラス

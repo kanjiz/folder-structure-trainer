@@ -117,9 +117,9 @@ function createIconItem(
   })
 
   // コンテキストメニューイベント
-  div.addEventListener('contextmenu', (e) => {
+  div.addEventListener('contextmenu', async (e) => {
     e.preventDefault()
-    showItemContextMenu(e, node.id, uiState, manager, onUpdate)
+    await showItemContextMenu(e, node.id, uiState, manager, onUpdate)
   })
 
   // ドラッグオーバーイベント（フォルダのみ）
@@ -320,13 +320,13 @@ function handleDrop(
 /**
  * アイテムのコンテキストメニューを表示
  */
-function showItemContextMenu(
+async function showItemContextMenu(
   event: MouseEvent,
   nodeId: string,
   uiState: UIStateManager,
   manager: FileSystemManager,
   onUpdate: () => void
-): void {
+): Promise<void> {
   // クリックされたアイテムが選択されていない場合は選択する
   if (!uiState.isSelected(nodeId)) {
     uiState.clearSelection()
@@ -335,7 +335,7 @@ function showItemContextMenu(
     onUpdate()
   }
 
-  showContextMenu({
+  await showContextMenu({
     x: event.clientX,
     y: event.clientY,
     items: [
@@ -366,7 +366,7 @@ function setupContextMenuForEmptyArea(
   manager: FileSystemManager,
   onUpdate: () => void
 ): void {
-  container.addEventListener('contextmenu', (e) => {
+  container.addEventListener('contextmenu', async (e) => {
     // アイコンアイテム上でのクリックは無視
     const target = e.target as HTMLElement
     if (target.closest('.icon-item')) {
@@ -374,7 +374,7 @@ function setupContextMenuForEmptyArea(
     }
 
     e.preventDefault()
-    showContextMenu({
+    await showContextMenu({
       x: e.clientX,
       y: e.clientY,
       items: [

@@ -26,7 +26,7 @@ describe('ContextMenu', () => {
   })
 
   describe('showContextMenu', () => {
-    it('should create and display context menu', () => {
+    it('should create and display context menu', async () => {
       const options: ContextMenuOptions = {
         x: 100,
         y: 150,
@@ -36,27 +36,27 @@ describe('ContextMenu', () => {
         ]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menu = document.querySelector('.context-menu')
       expect(menu).toBeTruthy()
     })
 
-    it('should set menu position correctly', () => {
+    it('should set menu position correctly', async () => {
       const options: ContextMenuOptions = {
         x: 100,
         y: 150,
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menu = document.querySelector('.context-menu') as HTMLElement
       expect(menu.style.left).toBe('100px')
       expect(menu.style.top).toBe('150px')
     })
 
-    it('should create menu items correctly', () => {
+    it('should create menu items correctly', async () => {
       const options: ContextMenuOptions = {
         x: 0,
         y: 0,
@@ -67,16 +67,16 @@ describe('ContextMenu', () => {
         ]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menuItems = document.querySelectorAll('.context-menu-item')
       expect(menuItems).toHaveLength(3)
-      expect(menuItems[0].textContent).toBe('Item 1')
-      expect(menuItems[1].textContent).toBe('Item 2')
-      expect(menuItems[2].textContent).toBe('Item 3')
+      expect(menuItems[0].textContent?.trim()).toBe('Item 1')
+      expect(menuItems[1].textContent?.trim()).toBe('Item 2')
+      expect(menuItems[2].textContent?.trim()).toBe('Item 3')
     })
 
-    it('should apply disabled class to disabled items', () => {
+    it('should apply disabled class to disabled items', async () => {
       const options: ContextMenuOptions = {
         x: 0,
         y: 0,
@@ -86,14 +86,14 @@ describe('ContextMenu', () => {
         ]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menuItems = document.querySelectorAll('.context-menu-item')
       expect(menuItems[0].classList.contains('disabled')).toBe(false)
       expect(menuItems[1].classList.contains('disabled')).toBe(true)
     })
 
-    it('should call onClick when item is clicked', () => {
+    it('should call onClick when item is clicked', async () => {
       const onClick = vi.fn()
       const options: ContextMenuOptions = {
         x: 0,
@@ -101,7 +101,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menuItem = document.querySelector('.context-menu-item') as HTMLElement
       menuItem.click()
@@ -109,7 +109,7 @@ describe('ContextMenu', () => {
       expect(onClick).toHaveBeenCalledTimes(1)
     })
 
-    it('should not call onClick when disabled item is clicked', () => {
+    it('should not call onClick when disabled item is clicked', async () => {
       const onClick = vi.fn()
       const options: ContextMenuOptions = {
         x: 0,
@@ -117,7 +117,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Disabled', disabled: true, onClick }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menuItem = document.querySelector('.context-menu-item') as HTMLElement
       menuItem.click()
@@ -125,14 +125,14 @@ describe('ContextMenu', () => {
       expect(onClick).not.toHaveBeenCalled()
     })
 
-    it('should hide menu after clicking an item', () => {
+    it('should hide menu after clicking an item', async () => {
       const options: ContextMenuOptions = {
         x: 0,
         y: 0,
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menuItem = document.querySelector('.context-menu-item') as HTMLElement
       menuItem.click()
@@ -141,7 +141,7 @@ describe('ContextMenu', () => {
       expect(menu).toBeNull()
     })
 
-    it('should replace existing menu when called twice', () => {
+    it('should replace existing menu when called twice', async () => {
       const options1: ContextMenuOptions = {
         x: 0,
         y: 0,
@@ -157,27 +157,27 @@ describe('ContextMenu', () => {
         ]
       }
 
-      showContextMenu(options1)
-      showContextMenu(options2)
+      await showContextMenu(options1)
+      await showContextMenu(options2)
 
       const menus = document.querySelectorAll('.context-menu')
       expect(menus).toHaveLength(1)
 
       const menuItems = document.querySelectorAll('.context-menu-item')
       expect(menuItems).toHaveLength(2)
-      expect(menuItems[0].textContent).toBe('Menu 2 Item 1')
+      expect(menuItems[0].textContent?.trim()).toBe('Menu 2 Item 1')
     })
   })
 
   describe('hideContextMenu', () => {
-    it('should remove context menu from DOM', () => {
+    it('should remove context menu from DOM', async () => {
       const options: ContextMenuOptions = {
         x: 0,
         y: 0,
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
       expect(document.querySelector('.context-menu')).toBeTruthy()
 
       hideContextMenu()
@@ -189,14 +189,14 @@ describe('ContextMenu', () => {
       expect(() => hideContextMenu()).not.toThrow()
     })
 
-    it('should be safe to call multiple times', () => {
+    it('should be safe to call multiple times', async () => {
       const options: ContextMenuOptions = {
         x: 0,
         y: 0,
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
       hideContextMenu()
       hideContextMenu()
 
@@ -205,7 +205,7 @@ describe('ContextMenu', () => {
   })
 
   describe('画面外調整', () => {
-    it('should adjust position when menu exceeds right edge', () => {
+    it('should adjust position when menu exceeds right edge', async () => {
       const options: ContextMenuOptions = {
         x: 1000, // 画面幅1024に近い位置
         y: 100,
@@ -215,7 +215,7 @@ describe('ContextMenu', () => {
         ]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menu = document.querySelector('.context-menu') as HTMLElement
       // getBoundingClientRect の幅を仮定して、位置が調整されているか確認
@@ -223,7 +223,7 @@ describe('ContextMenu', () => {
       expect(menu).toBeTruthy()
     })
 
-    it('should adjust position when menu exceeds bottom edge', () => {
+    it('should adjust position when menu exceeds bottom edge', async () => {
       const options: ContextMenuOptions = {
         x: 100,
         y: 750, // 画面高768に近い位置
@@ -233,7 +233,7 @@ describe('ContextMenu', () => {
         ]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       const menu = document.querySelector('.context-menu') as HTMLElement
       expect(menu).toBeTruthy()
@@ -248,7 +248,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       // setTimeout後にイベントリスナーが登録されるため、待機
       await new Promise(resolve => setTimeout(resolve, 10))
@@ -267,7 +267,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      showContextMenu(options)
+      await showContextMenu(options)
 
       await new Promise(resolve => setTimeout(resolve, 10))
 

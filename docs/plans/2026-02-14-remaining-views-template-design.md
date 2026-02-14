@@ -33,6 +33,7 @@ Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が�
 4. **手動テスト:** ユーザーによる動作確認
 
 **実装順序:**
+
 1. ContextMenu
 2. BreadcrumbView
 3. TreeView
@@ -104,6 +105,7 @@ Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が�
 ```
 
 **ポイント:**
+
 - 練習モード（q003）と演習モード（q004）の2問を追加
 - `answer` オブジェクトで空フォルダを `children: {}` として明示的に定義
 - シンプルな構成（フォルダ2つ、ファイル1つ）で空フォルダ判定をテストできる
@@ -115,6 +117,7 @@ Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が�
 **重要な設計決定:** breadcrumb を main-area から分離し、独立したナビゲーション要素とする。
 
 **理由:**
+
 - セマンティック的に明確: breadcrumb は「現在位置を示すグローバルナビゲーション」、tree/icon は「作業エリア」
 - HTML構造がシンプル: main-area は純粋に「左右2分割の作業エリア」になる
 - レイアウト変更が容易: breadcrumb の位置変更時に main-area に影響しない
@@ -160,7 +163,7 @@ Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が�
 
 **レイアウト構造:**
 
-```
+```text
 ┌─────────────────────────────┐
 │ instruction-area            │
 ├─────────────────────────────┤
@@ -235,6 +238,7 @@ Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が�
 ```
 
 **セマンティックHTMLの選択理由:**
+
 - **`<nav role="menu">`**: メニュー項目のナビゲーション
 - **`type="button"`**: フォーム送信を防ぐため明示的に指定
 - **ARIA attributes**: スクリーンリーダーのための補助情報を提供
@@ -244,7 +248,8 @@ Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が�
 #### 3-1. テンプレート化の共通パターン
 
 **ファイル構成:**
-```
+
+```text
 src/templates/
 ├── ContextMenu.hbs
 ├── BreadcrumbView.hbs
@@ -254,6 +259,7 @@ src/templates/
 ```
 
 **TypeScript 修正パターン:**
+
 ```typescript
 // Before: 文字列連結でHTML生成
 element.innerHTML = `<div class="...">`
@@ -267,6 +273,7 @@ element.innerHTML = html
 #### 3-2. ContextMenu
 
 **テンプレート (src/templates/ContextMenu.hbs):**
+
 ```handlebars
 <nav class="context-menu" role="menu" aria-label="コンテキストメニュー">
   {{#each items}}
@@ -284,6 +291,7 @@ element.innerHTML = html
 ```
 
 **TypeScript 修正 (src/views/ContextMenu.ts):**
+
 ```typescript
 import contextMenuTemplate from '../templates/ContextMenu.hbs?raw'
 
@@ -316,6 +324,7 @@ export function showContextMenu(options: ContextMenuOptions): void {
 #### 3-3. BreadcrumbView
 
 **テンプレート (src/templates/BreadcrumbView.hbs):**
+
 ```handlebars
 <nav class="breadcrumb-view" aria-label="フォルダの階層">
   {{#each path}}
@@ -336,6 +345,7 @@ export function showContextMenu(options: ContextMenuOptions): void {
 ```
 
 **TypeScript 修正 (src/views/BreadcrumbView.ts):**
+
 ```typescript
 import breadcrumbTemplate from '../templates/BreadcrumbView.hbs?raw'
 
@@ -367,6 +377,7 @@ export function renderBreadcrumbView(
 #### 3-4. TreeView
 
 **テンプレート (src/templates/TreeView.hbs):**
+
 ```handlebars
 <nav class="tree-view" aria-label="フォルダツリー">
   {{> treeNode nodes=root}}
@@ -398,6 +409,7 @@ export function renderBreadcrumbView(
 #### 3-5. IconViewDOM
 
 **テンプレート (src/templates/IconViewDOM.hbs):**
+
 ```handlebars
 <main class="icon-view-dom" aria-label="ファイル一覧" tabindex="0">
   {{#each items}}
@@ -418,6 +430,7 @@ export function renderBreadcrumbView(
 ```
 
 **TypeScript 修正 (src/views/IconViewDOM.ts):**
+
 ```typescript
 import iconViewTemplate from '../templates/IconViewDOM.hbs?raw'
 
@@ -450,6 +463,7 @@ function renderIconViewDOM(...): void {
 #### 3-6. GameView
 
 **テンプレート (src/templates/GameView.hbs):**
+
 ```handlebars
 <div class="game-view">
   <section class="instruction-area" aria-label="問題の指示">
@@ -478,6 +492,7 @@ function renderIconViewDOM(...): void {
 ```
 
 **TypeScript 修正 (src/views/GameView.ts):**
+
 ```typescript
 import gameViewTemplate from '../templates/GameView.hbs?raw'
 
@@ -505,13 +520,16 @@ export function renderGameView(...): void {
 #### 4-1. テストの日本語化
 
 **現状:**
+
 - ContextMenu.test.ts: describe() は一部日本語、it() は英語
 - IconViewDOM.test.ts: describe() は一部日本語、it() は英語
 
 **目標:**
+
 - SelectView.test.ts / ResultView.test.ts と同様に、**全ての it() を日本語化**
 
 **パターン:**
+
 ```typescript
 // Before (英語)
 it('should create and display context menu', () => { ... })
@@ -525,6 +543,7 @@ it('メニューの位置を正しく設定できる', () => { ... })
 #### 4-2. セマンティックHTMLのテスト追加
 
 **ContextMenu.test.ts に追加:**
+
 ```typescript
 describe('セマンティック構造', () => {
   it('nav要素とrole=menuを持つ', () => {
@@ -558,6 +577,7 @@ describe('セマンティック構造', () => {
 ```
 
 **IconViewDOM.test.ts に追加:**
+
 ```typescript
 describe('セマンティック構造', () => {
   it('main要素でaria-labelを持つ', () => {
@@ -590,16 +610,19 @@ describe('セマンティック構造', () => {
 #### 4-3. 新規テストファイル作成
 
 **BreadcrumbView.test.ts (新規作成):**
+
 - パンくずリスト表示
 - ナビゲーション
 - セマンティック構造（nav要素、role=button、aria-hidden）
 
 **TreeView.test.ts (新規作成):**
+
 - ツリー表示
 - ネストされたフォルダ表示
 - セマンティック構造（nav要素、role=tree、role=treeitem）
 
 **GameView.test.ts (新規作成):**
+
 - 画面構成（指示エリア、パンくずパネル、作業エリア、アクションエリア）
 - セマンティック構造（section、nav、main、footer、button type）
 

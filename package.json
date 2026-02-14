@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "type-check": "tsc --noEmit",
     "lint:md": "markdownlint-cli2 \"**/*.md\""
   },
   "devDependencies": {

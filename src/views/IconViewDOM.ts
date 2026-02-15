@@ -7,8 +7,10 @@ import iconViewTemplate from '../templates/IconViewDOM.hbs?raw'
 // キーボードイベントハンドラの参照を保持
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null
 
-// Handlebars ヘルパーを登録
-Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b)
+// Handlebars ヘルパーを登録（未登録の場合のみ）
+if (!Handlebars.helpers.eq) {
+  Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b)
+}
 
 // テンプレートをコンパイル
 const compiledTemplate = Handlebars.compile(iconViewTemplate)

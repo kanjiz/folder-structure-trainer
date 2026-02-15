@@ -6,7 +6,9 @@
 
 ## 概要
 
-Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が完了したため、Phase 3として残りのビュー（ContextMenu, BreadcrumbView, TreeView, IconViewDOM, GameView）のテンプレート化とセマンティックHTML化を実施する。
+Phase 1（SelectView）とPhase 2（ResultView）のテンプレート分離が完了したため、
+Phase 3として残りのビュー（ContextMenu, BreadcrumbView, TreeView, IconViewDOM, GameView）の
+テンプレート化とセマンティックHTML化を実施する。
 
 ## 背景
 

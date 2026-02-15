@@ -8,6 +8,8 @@ import { createIconViewDOM, destroyIconViewDOM } from './IconViewDOM'
 import Handlebars from 'handlebars'
 import gameViewTemplate from '../templates/GameView.hbs?raw'
 
+const compiledTemplate = Handlebars.compile(gameViewTemplate)
+
 /** 現在のゲームセッションで使用中のFileSystemManagerインスタンス */
 let manager: FileSystemManager | null = null
 
@@ -21,7 +23,7 @@ let iconPanelRef: HTMLElement | null = null
  * ゲーム画面をレンダリングします
  * @param container - レンダリング先のコンテナ要素
  * @param question - 表示する問題データ
- * @param onComplete - 答え合わせ完了時のコールバック
+ * @param onComplete - 答え合わせ完了時のコールバック。正解・不正解のアイテムIDリストを受け取る
  * @param onBack - 戻るボタンクリック時のコールバック
  */
 export function renderGameView(
@@ -36,9 +38,8 @@ export function renderGameView(
   // UIStateManagerを初期化
   uiStateManager = new UIStateManager(manager.root)
 
-  // テンプレートをコンパイルしてレンダリング
-  const template = Handlebars.compile(gameViewTemplate)
-  const html = template({
+  // テンプレートをレンダリング
+  const html = compiledTemplate({
     title: question.title,
     instructions: question.instructions,
     showCheckButton: question.mode === 'exercise'

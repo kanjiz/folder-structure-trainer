@@ -97,6 +97,21 @@ function attachEventListeners(
 }
 
 /**
+ * IDからノードを検索します（再帰的に探索）
+ * @param node - 検索開始ノード
+ * @param id - 検索対象のノードID
+ * @returns 見つかったノード、見つからない場合はnull
+ */
+function findNodeById(node: FSNode, id: string): FSNode | null {
+  if (node.id === id) return node
+  for (const child of node.children) {
+    const found = findNodeById(child, id)
+    if (found) return found
+  }
+  return null
+}
+
+/**
  * ツリービューのドラッグオーバーハンドラ
  */
 function handleTreeDragOver(event: DragEvent, element: HTMLElement): void {

@@ -1,5 +1,12 @@
+import Handlebars from 'handlebars'
 import type { FileSystemManager } from '../models/FileSystemManager'
 import type { FSNode } from '../models/FileSystem'
+import treeViewTemplate from '../templates/TreeView.hbs?raw'
+
+// eqヘルパーを登録（テンプレートで型比較に使用）
+Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b)
+
+const compiledTemplate = Handlebars.compile(treeViewTemplate)
 
 /**
  * ツリービューを初期レンダリングします
@@ -26,100 +33,67 @@ export function updateTreeView(
   manager: FileSystemManager,
   onUpdate?: () => void
 ): void {
-  container.innerHTML = ''
-
-  // ルートノード（Desktop）を作成
-  const rootUl = document.createElement('ul')
-  rootUl.className = 'tree-list'
-  rootUl.setAttribute('role', 'tree')
-
-  const rootLi = document.createElement('li')
-  rootLi.className = 'tree-item tree-folder'
-  rootLi.dataset.nodeId = manager.root.id
-  rootLi.setAttribute('role', 'treeitem')
-  rootLi.setAttribute('aria-label', 'Desktop (フォルダ)')
-  rootLi.setAttribute('aria-expanded', 'true')
-
-  const icon = '\u{1F4C1}'
-  rootLi.textContent = `${icon} Desktop`
-
-  // ルートへのドロップイベントを追加
-  rootLi.addEventListener('dragover', (e) => {
-    handleTreeDragOver(e, rootLi)
-  })
-
-  rootLi.addEventListener('dragleave', (e) => {
-    handleTreeDragLeave(e, rootLi)
-  })
-
-  rootLi.addEventListener('drop', (e) => {
-    handleTreeDrop(e, manager.root.id, rootLi, manager, onUpdate)
-  })
-
-  // ルートの子要素を追加
-  if (manager.root.children.length > 0) {
-    rootLi.appendChild(buildTreeList(manager.root, manager, onUpdate))
+  // ノードをテンプレートデータに変換する再帰関数
+  function nodeToTemplateData(node: FSNode): {
+    id: string
+    name: string
+    type: string
+    children?: Array<{ id: string; name: string; type: string; children?: unknown[] }>
+  } {
+    return {
+      id: node.id,
+      name: node.name === 'root' ? 'ルート' : node.name,
+      type: node.type,
+      children: node.children.length > 0
+        ? node.children.map(child => nodeToTemplateData(child))
+        : undefined
+    }
   }
 
-  rootUl.appendChild(rootLi)
-  container.appendChild(rootUl)
+  // テンプレートデータを準備（ルートノードを配列で渡す）
+  const templateData = {
+    root: [nodeToTemplateData(manager.root)]
+  }
+
+  // テンプレートからHTMLを生成
+  const html = compiledTemplate(templateData)
+  container.innerHTML = html
+
+  // イベントリスナーをアタッチ
+  attachEventListeners(container, manager, onUpdate)
 }
 
 /**
- * ノードから再帰的にツリー構造のHTMLリストを構築します
- * @param node - ツリー構築の起点となるノード
- * @param manager - ファイルシステムマネージャー
- * @param onUpdate - ノード移動時のコールバック（オプション）
- * @returns 構築されたulタグ要素
+ * ツリービューの各ノードにイベントリスナーをアタッチします
  */
-function buildTreeList(
-  node: FSNode,
+function attachEventListeners(
+  container: HTMLElement,
   manager: FileSystemManager,
   onUpdate?: () => void
-): HTMLUListElement {
-  const ul = document.createElement('ul')
-  ul.className = 'tree-list'
-  // ARIA attributes for tree
-  ul.setAttribute('role', 'tree')
+): void {
+  const folderItems = container.querySelectorAll('.tree-item.tree-folder')
 
-  for (const child of node.children) {
-    const li = document.createElement('li')
-    li.className = `tree-item tree-${child.type}`
-    li.dataset.nodeId = child.id
+  folderItems.forEach(item => {
+    const element = item as HTMLElement
+    const nodeId = element.dataset.nodeId
 
-    // ARIA attributes for tree item
-    li.setAttribute('role', 'treeitem')
-    li.setAttribute('aria-label', `${child.name} (${child.type === 'folder' ? 'フォルダ' : 'ファイル'})`)
-    if (child.type === 'folder') {
-      li.setAttribute('aria-expanded', child.children.length > 0 ? 'true' : 'false')
-    }
+    if (!nodeId) return
 
-    const icon = child.type === 'folder' ? '\u{1F4C1}' : '\u{1F4C4}'
-    li.textContent = `${icon} ${child.name}`
+    // ドラッグオーバーイベント
+    element.addEventListener('dragover', (e) => {
+      handleTreeDragOver(e, element)
+    })
 
-    // フォルダの場合はドロップイベントを追加
-    if (child.type === 'folder') {
-      li.addEventListener('dragover', (e) => {
-        handleTreeDragOver(e, li)
-      })
+    // ドラッグリーブイベント
+    element.addEventListener('dragleave', (e) => {
+      handleTreeDragLeave(e, element)
+    })
 
-      li.addEventListener('dragleave', (e) => {
-        handleTreeDragLeave(e, li)
-      })
-
-      li.addEventListener('drop', (e) => {
-        handleTreeDrop(e, child.id, li, manager, onUpdate)
-      })
-
-      if (child.children.length > 0) {
-        li.appendChild(buildTreeList(child, manager, onUpdate))
-      }
-    }
-
-    ul.appendChild(li)
-  }
-
-  return ul
+    // ドロップイベント
+    element.addEventListener('drop', (e) => {
+      handleTreeDrop(e, nodeId, element, manager, onUpdate)
+    })
+  })
 }
 
 /**

@@ -1,0 +1,24 @@
+<nav class="tree-view" aria-label="フォルダツリー">
+  {{> treeNode nodes=root}}
+</nav>
+
+{{!-- パーシャル: 再帰的なツリーノード --}}
+{{#*inline "treeNode"}}
+  <ul class="tree-list" role="tree">
+    {{#each nodes}}
+      <li
+        class="tree-item tree-{{type}}"
+        role="treeitem"
+        aria-label="{{name}} ({{#if (eq type 'folder')}}フォルダ{{else}}ファイル{{/if}})"
+        {{#if (eq type 'folder')}}aria-expanded="true"{{/if}}
+        data-node-id="{{id}}"
+      >
+        <span class="tree-icon">{{#if (eq type 'folder')}}📁{{else}}📄{{/if}}</span>
+        <span class="tree-name">{{name}}</span>
+        {{#if children}}
+          {{> treeNode nodes=children}}
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+{{/inline}}

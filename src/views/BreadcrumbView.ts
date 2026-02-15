@@ -1,5 +1,9 @@
+import Handlebars from 'handlebars'
 import type { FSNode } from '../models/FileSystem'
 import type { FileSystemManager } from '../models/FileSystemManager'
+import breadcrumbTemplate from '../templates/BreadcrumbView.hbs?raw'
+
+const compiledTemplate = Handlebars.compile(breadcrumbTemplate)
 
 /**
  * パンくずリストを表示するビュー
@@ -11,32 +15,30 @@ export function renderBreadcrumbView(
   onNavigate: (folder: FSNode) => void,
   onUpdate?: () => void
 ): void {
-  container.innerHTML = ''
-  container.classList.add('breadcrumb-view')
+  // パス情報を取得
+  const pathNodes = manager.getPath(currentFolder.id)
 
-  // ARIA attributes for navigation
-  container.setAttribute('role', 'navigation')
-  container.setAttribute('aria-label', 'パンくずリスト')
+  // テンプレートデータを準備（ルートノードの名前を「ルート」にマッピング）
+  const templateData = {
+    path: pathNodes.map(node => ({
+      id: node.id,
+      name: node.name === 'root' ? 'ルート' : node.name
+    }))
+  }
 
-  const path = getPath(currentFolder, manager)
-  const parts = path.split(' > ')
-  const folders = getFolders(currentFolder, manager)
+  // テンプレートからHTMLを生成
+  const html = compiledTemplate(templateData)
+  container.innerHTML = html
 
-  parts.forEach((part, index) => {
-    const span = document.createElement('span')
-    span.className = 'breadcrumb-item'
-    span.textContent = part
-    span.dataset.depth = index.toString()
-    span.dataset.folderId = folders[index].id
-
-    // ARIA attributes for breadcrumb item
-    span.setAttribute('role', 'button')
-    span.setAttribute('aria-label', `${part}に移動`)
-    span.tabIndex = 0
+  // 各パンくずアイテムにイベントハンドラをアタッチ
+  const items = container.querySelectorAll('.breadcrumb-item')
+  items.forEach((item, index) => {
+    const span = item as HTMLElement
+    const folder = pathNodes[index]
 
     // クリックでナビゲーション
     span.addEventListener('click', () => {
-      onNavigate(folders[index])
+      onNavigate(folder)
     })
 
     // ドラッグオーバーイベント
@@ -51,46 +53,9 @@ export function renderBreadcrumbView(
 
     // ドロップイベント
     span.addEventListener('drop', (e) => {
-      handleBreadcrumbDrop(e, folders[index].id, span, manager, onUpdate)
+      handleBreadcrumbDrop(e, folder.id, span, manager, onUpdate)
     })
-
-    container.appendChild(span)
-
-    if (index < parts.length - 1) {
-      const separator = document.createElement('span')
-      separator.className = 'breadcrumb-separator'
-      separator.textContent = ' > '
-      container.appendChild(separator)
-    }
   })
-}
-
-/**
- * 現在のフォルダまでのパスを取得
- */
-function getPath(node: FSNode, manager: FileSystemManager): string {
-  const parts: string[] = []
-  let current: FSNode | null = node
-  while (current && current !== manager.root) {
-    parts.unshift(current.name)
-    current = current.parent
-  }
-  parts.unshift('Desktop')
-  return parts.join(' > ')
-}
-
-/**
- * 現在のフォルダまでのフォルダ配列を取得
- */
-function getFolders(node: FSNode, manager: FileSystemManager): FSNode[] {
-  const folders: FSNode[] = []
-  let current: FSNode | null = node
-  while (current && current !== manager.root) {
-    folders.unshift(current)
-    current = current.parent
-  }
-  folders.unshift(manager.root)
-  return folders
 }
 
 /**

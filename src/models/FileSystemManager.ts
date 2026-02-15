@@ -200,6 +200,45 @@ export class FileSystemManager {
   }
 
   /**
+   * 指定されたノードまでのパスを取得します
+   *
+   * ルートから指定されたノードまでの経路を FSNode の配列として返します。
+   * パンくずリストの表示に使用されます。
+   *
+   * @param nodeId - パスを取得するノードのID（'root'でルート自身）
+   * @returns ルートからノードまでのパス（FSNodeの配列）
+   * @throws ノードが存在しない場合はエラー
+   *
+   * @example
+   * // ルート直下のフォルダのパスを取得
+   * const path = manager.getPath('folder1')
+   * // [rootNode, folder1Node]
+   *
+   * // 深い階層のファイルのパスを取得
+   * const path = manager.getPath('file1')
+   * // [rootNode, folderNode, subFolderNode, fileNode]
+   */
+  getPath(nodeId: string): FSNode[] {
+    if (nodeId === 'root') {
+      return [this.root]
+    }
+
+    const node = this.allNodes.get(nodeId)
+    if (!node) {
+      throw new Error(`Node with id "${nodeId}" not found`)
+    }
+
+    const path: FSNode[] = []
+    let current: FSNode | null = node
+    while (current && current !== this.root) {
+      path.unshift(current)
+      current = current.parent
+    }
+    path.unshift(this.root)
+    return path
+  }
+
+  /**
    * 単一のノードの配置が正解かどうかをチェックします（練習モード用）
    *
    * 練習モードで使用されるメソッド。移動直後に即座にフィードバックを

@@ -139,4 +139,41 @@ describe('FileSystemManager', () => {
     const tree = manager.buildCurrentTree()
     expect(tree).toEqual(sampleQuestion.answer)
   })
+
+  describe('getPath', () => {
+    it('should return path array for root node', () => {
+      const path = manager.getPath('root')
+      expect(path).toHaveLength(1)
+      expect(path[0].id).toBe('root')
+      expect(path[0].name).toBe('root')
+    })
+
+    it('should return path array for node directly under root', () => {
+      const path = manager.getPath('f1') // 仕事フォルダ
+      expect(path).toHaveLength(2)
+      expect(path[0].id).toBe('root')
+      expect(path[1].id).toBe('f1')
+      expect(path[1].name).toBe('仕事')
+    })
+
+    it('should return path array for deeply nested node', () => {
+      // 会議を仕事に移動し、議事録を会議に移動
+      manager.moveNode('f2', 'f1')  // 会議 → 仕事
+      manager.moveNode('d2', 'f2')  // 議事録 → 会議
+
+      const path = manager.getPath('d2') // 議事録
+      expect(path).toHaveLength(4)
+      expect(path[0].id).toBe('root')
+      expect(path[1].id).toBe('f1')
+      expect(path[1].name).toBe('仕事')
+      expect(path[2].id).toBe('f2')
+      expect(path[2].name).toBe('会議')
+      expect(path[3].id).toBe('d2')
+      expect(path[3].name).toBe('議事録.txt')
+    })
+
+    it('should throw error for non-existent node', () => {
+      expect(() => manager.getPath('invalid-id')).toThrow()
+    })
+  })
 })

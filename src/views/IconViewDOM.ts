@@ -1,10 +1,19 @@
-import type { FSNode } from '../models/FileSystem'
 import type { FileSystemManager } from '../models/FileSystemManager'
 import type { UIStateManager } from '../models/UIStateManager'
 import { showContextMenu, hideContextMenu } from './ContextMenu'
+import Handlebars from 'handlebars'
+import iconViewTemplate from '../templates/IconViewDOM.hbs?raw'
 
 // キーボードイベントハンドラの参照を保持
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null
+
+// Handlebars ヘルパーを登録（未登録の場合のみ）
+if (!Handlebars.helpers.eq) {
+  Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b)
+}
+
+// テンプレートをコンパイル
+const compiledTemplate = Handlebars.compile(iconViewTemplate)
 
 /**
  * DOM版のIconView
@@ -16,13 +25,14 @@ export function createIconViewDOM(
   uiState: UIStateManager,
   onUpdate: () => void
 ): void {
-  // コンテナをフォーカス可能にする（空のフォルダでもキーボードショートカットが使えるように）
-  container.tabIndex = 0
-
   renderIconViewDOM(container, manager, uiState, onUpdate)
-  setupKeyboardShortcuts(container, manager, uiState, onUpdate)
-  setupContextMenuForEmptyArea(container, uiState, manager, onUpdate)
-  setupEmptyAreaClick(container, uiState, onUpdate)
+
+  const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+  if (!main) return
+
+  setupKeyboardShortcuts(main, manager, uiState, onUpdate)
+  setupContextMenuForEmptyArea(main, uiState, manager, onUpdate)
+  setupEmptyAreaClick(main, uiState, onUpdate)
 }
 
 /**
@@ -38,15 +48,20 @@ function renderIconViewDOM(
   const activeElement = document.activeElement as HTMLElement
   const focusedNodeId = activeElement?.dataset?.nodeId
 
-  container.innerHTML = ''
-  container.className = 'icon-view-dom'
+  // テンプレートデータ準備
+  const items = uiState.currentFolder.children.map(node => ({
+    id: node.id,
+    name: node.name,
+    type: node.type,
+    selected: uiState.isSelected(node.id)
+  }))
 
-  const items = uiState.currentFolder.children
+  // テンプレートからHTML生成
+  const html = compiledTemplate({ items })
+  container.innerHTML = html
 
-  items.forEach(node => {
-    const itemEl = createIconItem(node, uiState, manager, onUpdate)
-    container.appendChild(itemEl)
-  })
+  // イベントリスナーをアタッチ
+  attachEventListeners(container, manager, uiState, onUpdate)
 
   // フォーカスを復元
   if (focusedNodeId) {
@@ -59,85 +74,64 @@ function renderIconViewDOM(
 
   // フォーカス復元に失敗、または初回レンダリングの場合
   // コンテナにフォーカスを移す（どこからナビゲーションしてもキーボード操作可能に）
-  container.focus()
+  const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+  if (main) {
+    main.focus()
+  }
 }
 
 /**
- * アイコンアイテムを作成
+ * イベントリスナーをアタッチ
  */
-function createIconItem(
-  node: FSNode,
-  uiState: UIStateManager,
+function attachEventListeners(
+  container: HTMLElement,
   manager: FileSystemManager,
+  uiState: UIStateManager,
   onUpdate: () => void
-): HTMLElement {
-  const div = document.createElement('div')
-  div.className = 'icon-item'
-  div.dataset.nodeId = node.id
-  div.tabIndex = 0
-  div.draggable = true
+): void {
+  container.querySelectorAll('.icon-item').forEach(itemEl => {
+    const element = itemEl as HTMLElement
+    const nodeId = element.dataset.nodeId!
+    const node = uiState.currentFolder.children.find(n => n.id === nodeId)!
 
-  // ARIA attributes
-  div.setAttribute('role', 'button')
-  div.setAttribute('aria-label', `${node.name} (${node.type === 'folder' ? 'フォルダ' : 'ファイル'})`)
-  div.setAttribute('aria-selected', uiState.isSelected(node.id).toString())
+    // クリックイベント
+    element.addEventListener('click', (e) => {
+      element.focus()
+      handleItemClick(nodeId, e as MouseEvent, uiState, manager, onUpdate)
+    })
 
-  if (uiState.isSelected(node.id)) {
-    div.classList.add('selected')
-  }
+    // ダブルクリックイベント
+    element.addEventListener('dblclick', () => {
+      if (node.type === 'folder') {
+        uiState.navigateToFolder(node)
+        onUpdate()
+      }
+    })
 
-  // アイコンと名前
-  const icon = document.createElement('div')
-  icon.className = 'icon-symbol'
-  icon.textContent = node.type === 'folder' ? '📁' : '📄'
-  div.appendChild(icon)
+    // ドラッグ開始
+    element.addEventListener('dragstart', (e) => {
+      handleDragStart(e as DragEvent, nodeId, uiState)
+    })
 
-  const name = document.createElement('div')
-  name.className = 'icon-name'
-  name.textContent = node.name
-  div.appendChild(name)
+    // コンテキストメニュー
+    element.addEventListener('contextmenu', async (e) => {
+      e.preventDefault()
+      await showItemContextMenu(e as MouseEvent, nodeId, uiState, manager, onUpdate)
+    })
 
-  // クリックイベント（選択）
-  div.addEventListener('click', (e) => {
-    div.focus()
-    handleItemClick(node.id, e, uiState, manager, onUpdate)
-  })
-
-  // ダブルクリックイベント（フォルダを開く）
-  div.addEventListener('dblclick', () => {
+    // フォルダのみ: ドラッグ&ドロップ
     if (node.type === 'folder') {
-      uiState.navigateToFolder(node)
-      onUpdate()
+      element.addEventListener('dragover', (e) => {
+        handleDragOver(e as DragEvent, element)
+      })
+      element.addEventListener('dragleave', (e) => {
+        handleDragLeave(e as DragEvent, element)
+      })
+      element.addEventListener('drop', (e) => {
+        handleDrop(e as DragEvent, nodeId, element, manager, onUpdate)
+      })
     }
   })
-
-  // ドラッグ開始イベント
-  div.addEventListener('dragstart', (e) => {
-    handleDragStart(e, node.id, uiState)
-  })
-
-  // コンテキストメニューイベント
-  div.addEventListener('contextmenu', async (e) => {
-    e.preventDefault()
-    await showItemContextMenu(e, node.id, uiState, manager, onUpdate)
-  })
-
-  // ドラッグオーバーイベント（フォルダのみ）
-  if (node.type === 'folder') {
-    div.addEventListener('dragover', (e) => {
-      handleDragOver(e, div)
-    })
-
-    div.addEventListener('dragleave', (e) => {
-      handleDragLeave(e, div)
-    })
-
-    div.addEventListener('drop', (e) => {
-      handleDrop(e, node.id, div, manager, onUpdate)
-    })
-  }
-
-  return div
 }
 
 /**
@@ -475,7 +469,10 @@ function pasteItems(
 export function destroyIconViewDOM(container: HTMLElement): void {
   // キーボードイベントハンドラをクリーンアップ
   if (keydownHandler) {
-    container.removeEventListener('keydown', keydownHandler)
+    const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+    if (main) {
+      main.removeEventListener('keydown', keydownHandler)
+    }
     keydownHandler = null
   }
   // コンテキストメニューを閉じる

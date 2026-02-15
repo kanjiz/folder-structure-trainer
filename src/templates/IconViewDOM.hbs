@@ -1,0 +1,16 @@
+<main class="icon-view-dom" aria-label="ファイル一覧" tabindex="0">
+  {{#each items}}
+    <div
+      class="icon-item {{#if selected}}selected{{/if}}"
+      role="button"
+      tabindex="0"
+      aria-label="{{name}} ({{#if (eq type 'folder')}}フォルダ{{else}}ファイル{{/if}})"
+      aria-selected="{{selected}}"
+      data-node-id="{{id}}"
+      draggable="true"
+    >
+      <div class="icon-symbol">{{#if (eq type 'folder')}}📁{{else}}📄{{/if}}</div>
+      <div class="icon-name">{{name}}</div>
+    </div>
+  {{/each}}
+</main>

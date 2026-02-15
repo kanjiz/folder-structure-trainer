@@ -16,7 +16,7 @@
 
 - Modify: `src/data/questions.ts`
 
-**Step 1: q003とq004の問題を追加する**
+### Step 1: q003とq004の問題を追加する
 
 `src/data/questions.ts` の `questions` 配列に、空フォルダ判定をテストするための2つの問題を追加します。
 
@@ -76,12 +76,12 @@
 }
 ```
 
-**Step 2: TypeScriptの型チェックを実行**
+### Step 2: TypeScriptの型チェックを実行
 
 Run: `npm run build`
 Expected: ビルドが成功し、型エラーがないことを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/data/questions.ts
@@ -98,7 +98,7 @@ git commit -m "feat: 空フォルダ判定用のテスト問題（q003, q004）�
 
 - Create: `src/templates/ContextMenu.hbs`
 
-**Step 1: Handlebars テンプレートを作成する**
+### Step 1: Handlebars テンプレートを作成する
 
 セマンティックHTML（`<nav>`, `<button>`）とARIA属性を使用したテンプレートを作成します。
 
@@ -118,7 +118,7 @@ git commit -m "feat: 空フォルダ判定用のテスト問題（q003, q004）�
 </nav>
 ```
 
-**Step 2: コミット**
+### Step 2: コミット
 
 ```bash
 git add src/templates/ContextMenu.hbs
@@ -131,7 +131,7 @@ git commit -m "feat: ContextMenuのHandlebarsテンプレートを作成"
 
 - Modify: `src/views/ContextMenu.ts`
 
-**Step 1: テンプレートをインポートしてレンダリングに使用する**
+### Step 1: テンプレートをインポートしてレンダリングに使用する
 
 既存の文字列連結によるHTML生成を、Handlebarsテンプレートに置き換えます。
 
@@ -168,12 +168,12 @@ export function showContextMenu(options: ContextMenuOptions): void {
 }
 ```
 
-**Step 2: テストを実行して動作確認**
+### Step 2: テストを実行して動作確認
 
 Run: `npm run test -- ContextMenu.test.ts`
 Expected: 既存のテストがすべて通ることを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/ContextMenu.ts
@@ -186,7 +186,7 @@ git commit -m "feat: ContextMenuでHandlebarsテンプレートを使用"
 
 - Modify: `src/views/ContextMenu.test.ts`
 
-**Step 1: 全ての it() を日本語に変更する**
+### Step 1: 全ての it() を日本語に変更する
 
 `src/views/ContextMenu.test.ts` の全ての `it()` ブロックを日本語に変更します。
 
@@ -206,12 +206,12 @@ it('コンテキストメニューを作成して表示できる', () => { ... }
 - `should set menu position correctly` → `メニューの位置を正しく設定できる`
 - など
 
-**Step 2: テストを実行して動作確認**
+### Step 2: テストを実行して動作確認
 
 Run: `npm run test -- ContextMenu.test.ts`
 Expected: すべてのテストが通ることを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/ContextMenu.test.ts
@@ -224,7 +224,7 @@ git commit -m "test: ContextMenu テストを日本語化"
 
 - Modify: `src/views/ContextMenu.test.ts`
 
-**Step 1: セマンティック構造のテストを追加する**
+### Step 1: セマンティック構造のテストを追加する
 
 `src/views/ContextMenu.test.ts` に新しい `describe` ブロックを追加:
 
@@ -272,12 +272,12 @@ describe('セマンティック構造', () => {
 })
 ```
 
-**Step 2: テストを実行して動作確認**
+### Step 2: テストを実行して動作確認
 
 Run: `npm run test -- ContextMenu.test.ts`
 Expected: 新しいテストを含めてすべて通ることを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/ContextMenu.test.ts
@@ -294,7 +294,7 @@ git commit -m "test: ContextMenu のセマンティックHTML検証テストを�
 
 - Create: `src/templates/BreadcrumbView.hbs`
 
-**Step 1: Handlebars テンプレートを作成する**
+### Step 1: Handlebars テンプレートを作成する
 
 ```handlebars
 <nav class="breadcrumb-view" aria-label="フォルダの階層">
@@ -315,7 +315,7 @@ git commit -m "test: ContextMenu のセマンティックHTML検証テストを�
 </nav>
 ```
 
-**Step 2: コミット**
+### Step 2: コミット
 
 ```bash
 git add src/templates/BreadcrumbView.hbs
@@ -328,7 +328,7 @@ git commit -m "feat: BreadcrumbViewのHandlebarsテンプレートを作成"
 
 - Modify: `src/views/BreadcrumbView.ts`
 
-**Step 1: テンプレートをインポートしてレンダリングに使用する**
+### Step 1: テンプレートをインポートしてレンダリングに使用する
 
 `src/views/BreadcrumbView.ts` の `renderBreadcrumbView` 関数を修正:
 
@@ -361,12 +361,12 @@ export function renderBreadcrumbView(
 }
 ```
 
-**Step 2: 既存の使用箇所を確認**
+### Step 2: 既存の使用箇所を確認
 
 Run: `npm run build`
 Expected: ビルドが成功することを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/BreadcrumbView.ts
@@ -379,7 +379,7 @@ git commit -m "feat: BreadcrumbViewでHandlebarsテンプレートを使用"
 
 - Create: `src/views/BreadcrumbView.test.ts`
 
-**Step 1: テストファイルを作成する**
+### Step 1: テストファイルを作成する
 
 ```typescript
 /**
@@ -489,21 +489,21 @@ describe('BreadcrumbView', () => {
 })
 ```
 
-**Step 2: テストを実行して失敗を確認**
+### Step 2: テストを実行して失敗を確認
 
 Run: `npm run test -- BreadcrumbView.test.ts`
 Expected: テストが失敗する（実装がまだ完全でない可能性がある）
 
-**Step 3: 必要に応じて BreadcrumbView.ts を修正**
+### Step 3: 必要に応じて BreadcrumbView.ts を修正
 
 テストの失敗内容に応じて、`src/views/BreadcrumbView.ts` を修正します。
 
-**Step 4: テストを実行して成功を確認**
+### Step 4: テストを実行して成功を確認
 
 Run: `npm run test -- BreadcrumbView.test.ts`
 Expected: すべてのテストが通ることを確認
 
-**Step 5: コミット**
+### Step 5: コミット
 
 ```bash
 git add src/views/BreadcrumbView.test.ts
@@ -520,12 +520,12 @@ git commit -m "test: BreadcrumbView のテストを作成"
 
 - Modify: `vite.config.ts`
 
-**Step 1: vite-plugin-handlebars をインストール**
+### Step 1: vite-plugin-handlebars をインストール
 
 Run: `npm install -D vite-plugin-handlebars`
 Expected: パッケージがインストールされる
 
-**Step 2: vite.config.ts に handlebars プラグインと eq ヘルパーを追加**
+### Step 2: vite.config.ts に handlebars プラグインと eq ヘルパーを追加
 
 ```typescript
 import { defineConfig } from 'vite'
@@ -548,12 +548,12 @@ export default defineConfig({
 })
 ```
 
-**Step 3: ビルドを実行して確認**
+### Step 3: ビルドを実行して確認
 
 Run: `npm run build`
 Expected: ビルドが成功することを確認
 
-**Step 4: コミット**
+### Step 4: コミット
 
 ```bash
 git add vite.config.ts package.json package-lock.json
@@ -566,7 +566,7 @@ git commit -m "feat: Handlebars の eq ヘルパーを vite.config.ts に追加"
 
 - Create: `src/templates/TreeView.hbs`
 
-**Step 1: Handlebars テンプレートを作成する**
+### Step 1: Handlebars テンプレートを作成する
 
 再帰的なツリー構造を表現するために、パーシャルを使用します。
 
@@ -596,7 +596,7 @@ git commit -m "feat: Handlebars の eq ヘルパーを vite.config.ts に追加"
 {{/inline}}
 ```
 
-**Step 2: コミット**
+### Step 2: コミット
 
 ```bash
 git add src/templates/TreeView.hbs
@@ -609,7 +609,7 @@ git commit -m "feat: TreeViewのHandlebarsテンプレートを作成"
 
 - Modify: `src/views/TreeView.ts`
 
-**Step 1: テンプレートをインポートしてレンダリングに使用する**
+### Step 1: テンプレートをインポートしてレンダリングに使用する
 
 `src/views/TreeView.ts` の該当関数を修正:
 
@@ -646,12 +646,12 @@ function findNodeById(node: FSNode, id: string): FSNode | null {
 }
 ```
 
-**Step 2: ビルドを実行して確認**
+### Step 2: ビルドを実行して確認
 
 Run: `npm run build`
 Expected: ビルドが成功することを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/TreeView.ts
@@ -664,7 +664,7 @@ git commit -m "feat: TreeViewでHandlebarsテンプレートを使用"
 
 - Create: `src/views/TreeView.test.ts`
 
-**Step 1: テストファイルを作成する**
+### Step 1: テストファイルを作成する
 
 ```typescript
 /**
@@ -768,21 +768,21 @@ describe('TreeView', () => {
 })
 ```
 
-**Step 2: テストを実行して失敗を確認**
+### Step 2: テストを実行して失敗を確認
 
 Run: `npm run test -- TreeView.test.ts`
 Expected: テストが失敗する（実装がまだ完全でない可能性がある）
 
-**Step 3: 必要に応じて TreeView.ts を修正**
+### Step 3: 必要に応じて TreeView.ts を修正
 
 テストの失敗内容に応じて、`src/views/TreeView.ts` を修正します。
 
-**Step 4: テストを実行して成功を確認**
+### Step 4: テストを実行して成功を確認
 
 Run: `npm run test -- TreeView.test.ts`
 Expected: すべてのテストが通ることを確認
 
-**Step 5: コミット**
+### Step 5: コミット
 
 ```bash
 git add src/views/TreeView.test.ts
@@ -799,7 +799,7 @@ git commit -m "test: TreeView のテストを作成"
 
 - Create: `src/templates/IconViewDOM.hbs`
 
-**Step 1: Handlebars テンプレートを作成する**
+### Step 1: Handlebars テンプレートを作成する
 
 ```handlebars
 <main class="icon-view-dom" aria-label="ファイル一覧" tabindex="0">
@@ -820,7 +820,7 @@ git commit -m "test: TreeView のテストを作成"
 </main>
 ```
 
-**Step 2: コミット**
+### Step 2: コミット
 
 ```bash
 git add src/templates/IconViewDOM.hbs
@@ -833,7 +833,7 @@ git commit -m "feat: IconViewDOMのHandlebarsテンプレートを作成"
 
 - Modify: `src/views/IconViewDOM.ts`
 
-**Step 1: テンプレートをインポートしてレンダリングに使用する**
+### Step 1: テンプレートをインポートしてレンダリングに使用する
 
 `src/views/IconViewDOM.ts` の `renderIconViewDOM` 関数を修正:
 
@@ -878,12 +878,12 @@ function renderIconViewDOM(
 }
 ```
 
-**Step 2: テストを実行して動作確認**
+### Step 2: テストを実行して動作確認
 
 Run: `npm run test -- IconViewDOM.test.ts`
 Expected: 既存のテストがすべて通ることを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/IconViewDOM.ts
@@ -896,7 +896,7 @@ git commit -m "feat: IconViewDOMでHandlebarsテンプレートを使用"
 
 - Modify: `src/views/IconViewDOM.test.ts`
 
-**Step 1: 全ての it() を日本語に変更する**
+### Step 1: 全ての it() を日本語に変更する
 
 `src/views/IconViewDOM.test.ts` の全ての `it()` ブロックを日本語に変更します。
 
@@ -910,12 +910,12 @@ it('should clear selection when clicking on empty area', () => { ... })
 it('空白エリアをクリックすると選択が解除される', () => { ... })
 ```
 
-**Step 2: テストを実行して動作確認**
+### Step 2: テストを実行して動作確認
 
 Run: `npm run test -- IconViewDOM.test.ts`
 Expected: すべてのテストが通ることを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/IconViewDOM.test.ts
@@ -928,7 +928,7 @@ git commit -m "test: IconViewDOM テストを日本語化"
 
 - Modify: `src/views/IconViewDOM.test.ts`
 
-**Step 1: セマンティック構造のテストを追加する**
+### Step 1: セマンティック構造のテストを追加する
 
 ```typescript
 describe('セマンティック構造', () => {
@@ -959,12 +959,12 @@ describe('セマンティック構造', () => {
 })
 ```
 
-**Step 2: テストを実行して動作確認**
+### Step 2: テストを実行して動作確認
 
 Run: `npm run test -- IconViewDOM.test.ts`
 Expected: 新しいテストを含めてすべて通ることを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/IconViewDOM.test.ts
@@ -981,7 +981,7 @@ git commit -m "test: IconViewDOM のセマンティックHTML検証テストを�
 
 - Modify: `src/style.css` (または該当するCSSファイル)
 
-**Step 1: breadcrumb 分離に伴う CSS を修正する**
+### Step 1: breadcrumb 分離に伴う CSS を修正する
 
 設計書の「2-2. CSS 修正内容」に従って、`.main-area`, `.breadcrumb-panel`, `.tree-panel`, `.icon-panel` のスタイルを修正します。
 
@@ -992,12 +992,12 @@ git commit -m "test: IconViewDOM のセマンティックHTML検証テストを�
 - `.tree-panel` から `grid-row: 2;` を削除
 - `.icon-panel` から `grid-row: 2;` を削除
 
-**Step 2: ビルドを実行して確認**
+### Step 2: ビルドを実行して確認
 
 Run: `npm run build`
 Expected: ビルドが成功することを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/style.css
@@ -1010,7 +1010,7 @@ git commit -m "feat: breadcrumb分離に伴うCSSレイアウトを修正"
 
 - Create: `src/templates/GameView.hbs`
 
-**Step 1: Handlebars テンプレートを作成する**
+### Step 1: Handlebars テンプレートを作成する
 
 ```handlebars
 <div class="game-view">
@@ -1039,7 +1039,7 @@ git commit -m "feat: breadcrumb分離に伴うCSSレイアウトを修正"
 </div>
 ```
 
-**Step 2: コミット**
+### Step 2: コミット
 
 ```bash
 git add src/templates/GameView.hbs
@@ -1052,7 +1052,7 @@ git commit -m "feat: GameViewのHandlebarsテンプレートを作成"
 
 - Modify: `src/views/GameView.ts`
 
-**Step 1: テンプレートをインポートしてレンダリングに使用する**
+### Step 1: テンプレートをインポートしてレンダリングに使用する
 
 `src/views/GameView.ts` の `renderGameView` 関数を修正:
 
@@ -1097,12 +1097,12 @@ export function renderGameView(
 }
 ```
 
-**Step 2: ビルドを実行して確認**
+### Step 2: ビルドを実行して確認
 
 Run: `npm run build`
 Expected: ビルドが成功することを確認
 
-**Step 3: コミット**
+### Step 3: コミット
 
 ```bash
 git add src/views/GameView.ts
@@ -1115,7 +1115,7 @@ git commit -m "feat: GameViewでHandlebarsテンプレートを使用"
 
 - Create: `src/views/GameView.test.ts`
 
-**Step 1: テストファイルを作成する**
+### Step 1: テストファイルを作成する
 
 ```typescript
 /**
@@ -1273,21 +1273,21 @@ describe('GameView', () => {
 })
 ```
 
-**Step 2: テストを実行して失敗を確認**
+### Step 2: テストを実行して失敗を確認
 
 Run: `npm run test -- GameView.test.ts`
 Expected: テストが失敗する（実装がまだ完全でない可能性がある）
 
-**Step 3: 必要に応じて GameView.ts を修正**
+### Step 3: 必要に応じて GameView.ts を修正
 
 テストの失敗内容に応じて、`src/views/GameView.ts` を修正します。
 
-**Step 4: テストを実行して成功を確認**
+### Step 4: テストを実行して成功を確認
 
 Run: `npm run test -- GameView.test.ts`
 Expected: すべてのテストが通ることを確認
 
-**Step 5: コミット**
+### Step 5: コミット
 
 ```bash
 git add src/views/GameView.test.ts
@@ -1302,12 +1302,12 @@ git commit -m "test: GameView のテストを作成"
 
 **Files:** N/A
 
-**Step 1: 全テストを実行する**
+### Step 1: 全テストを実行する
 
 Run: `npm run test`
 Expected: すべてのテストが通ることを確認
 
-**Step 2: カバレッジを確認（オプション）**
+### Step 2: カバレッジを確認（オプション）
 
 Run: `npm run test -- --coverage` (package.json にスクリプトがあれば)
 Expected: カバレッジレポートを確認
@@ -1316,12 +1316,12 @@ Expected: カバレッジレポートを確認
 
 **Files:** N/A
 
-**Step 1: プロダクションビルドを実行する**
+### Step 1: プロダクションビルドを実行する
 
 Run: `npm run build`
 Expected: ビルドが成功することを確認
 
-**Step 2: プレビューで動作確認**
+### Step 2: プレビューで動作確認
 
 Run: `npm run preview`
 Expected: ブラウザで動作確認し、すべての機能が正常に動作することを確認
@@ -1330,16 +1330,16 @@ Expected: ブラウザで動作確認し、すべての機能が正常に動作�
 
 **Files:** N/A
 
-**Step 1: Markdown ファイルをリントする**
+### Step 1: Markdown ファイルをリントする
 
 Run: `npm run lint:md`
 Expected: エラーがないことを確認
 
-**Step 2: エラーがあれば修正する**
+### Step 2: エラーがあれば修正する
 
 設計書や実装計画にエラーがあれば修正します。
 
-**Step 3: 修正があればコミット**
+### Step 3: 修正があればコミット
 
 ```bash
 git add docs/

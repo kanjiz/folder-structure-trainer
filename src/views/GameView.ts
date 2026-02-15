@@ -5,6 +5,8 @@ import { UIStateManager } from '../models/UIStateManager'
 import { renderTreeView, updateTreeView } from './TreeView'
 import { renderBreadcrumbView } from './BreadcrumbView'
 import { createIconViewDOM, destroyIconViewDOM } from './IconViewDOM'
+import Handlebars from 'handlebars'
+import gameViewTemplate from '../templates/GameView.hbs?raw'
 
 /** 現在のゲームセッションで使用中のFileSystemManagerインスタンス */
 let manager: FileSystemManager | null = null
@@ -34,30 +36,16 @@ export function renderGameView(
   // UIStateManagerを初期化
   uiStateManager = new UIStateManager(manager.root)
 
-  const wrapper = document.createElement('div')
-  wrapper.className = 'game-view'
+  // テンプレートをコンパイルしてレンダリング
+  const template = Handlebars.compile(gameViewTemplate)
+  const html = template({
+    title: question.title,
+    instructions: question.instructions,
+    showCheckButton: question.mode === 'exercise'
+  })
 
-  wrapper.innerHTML = `
-    <div class="instruction-area">
-      <h2>${question.title}</h2>
-      <ul class="instructions">
-        ${question.instructions.map(i => `<li>${i}</li>`).join('')}
-      </ul>
-    </div>
-    <div class="main-area">
-      <div class="breadcrumb-panel" id="breadcrumb-panel"></div>
-      <div class="tree-panel" id="tree-panel"></div>
-      <div class="icon-panel" id="icon-panel"></div>
-    </div>
-    <div class="action-area">
-      ${question.mode === 'exercise'
-        ? '<button id="check-btn" class="btn-primary">答え合わせ</button>'
-        : ''}
-      <button id="back-btn" class="btn-secondary">問題選択に戻る</button>
-    </div>
-  `
-
-  container.appendChild(wrapper)
+  container.innerHTML = html
+  const wrapper = container.firstElementChild as HTMLElement
 
   const breadcrumbPanel = wrapper.querySelector<HTMLElement>('#breadcrumb-panel')!
   const treePanel = wrapper.querySelector<HTMLElement>('#tree-panel')!

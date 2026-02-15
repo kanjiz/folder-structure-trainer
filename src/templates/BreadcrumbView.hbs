@@ -1,0 +1,16 @@
+<nav class="breadcrumb-view" aria-label="フォルダの階層">
+  {{#each path}}
+    <span
+      class="breadcrumb-item"
+      role="button"
+      tabindex="0"
+      aria-label="{{name}}に移動"
+      data-node-id="{{id}}"
+    >
+      {{name}}
+    </span>
+    {{#unless @last}}
+      <span class="breadcrumb-separator" aria-hidden="true">&gt;</span>
+    {{/unless}}
+  {{/each}}
+</nav>

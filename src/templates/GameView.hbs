@@ -1,0 +1,24 @@
+<div class="game-view">
+  <section class="instruction-area" aria-label="問題の指示">
+    <h2>{{title}}</h2>
+    <ul class="instructions" role="list">
+      {{#each instructions}}
+        <li role="listitem">{{this}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <nav class="breadcrumb-panel" aria-label="フォルダの階層" id="breadcrumb-panel"></nav>
+
+  <div class="main-area">
+    <nav class="tree-panel" aria-label="フォルダツリー" id="tree-panel"></nav>
+    <main class="icon-panel" aria-label="ファイル一覧" id="icon-panel"></main>
+  </div>
+
+  <footer class="action-area">
+    {{#if showCheckButton}}
+      <button type="button" id="check-btn" class="btn-primary">答え合わせ</button>
+    {{/if}}
+    <button type="button" id="back-btn" class="btn-secondary">問題選択に戻る</button>
+  </footer>
+</div>

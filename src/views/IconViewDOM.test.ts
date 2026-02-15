@@ -45,22 +45,24 @@ describe('IconViewDOM', () => {
   })
 
   describe('空白エリアクリックで選択解除', () => {
-    it('should clear selection when clicking on empty area', () => {
+    it('空白エリアをクリックすると選択が解除される', () => {
       // いくつかのアイテムを選択
       uiState.toggleSelection('file1')
       uiState.toggleSelection('file2')
       expect(uiState.selection.size).toBe(2)
 
-      // 空白エリアをクリック（コンテナ直接）
+      // 空白エリアをクリック（main要素）
+      const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+      expect(main).toBeTruthy()
       const clickEvent = new MouseEvent('click', { bubbles: true })
-      container.dispatchEvent(clickEvent)
+      main!.dispatchEvent(clickEvent)
 
       // 選択が解除されているか確認
       expect(uiState.selection.size).toBe(0)
       expect(onUpdate).toHaveBeenCalled()
     })
 
-    it('should not clear selection when clicking on an icon item', () => {
+    it('アイコンアイテムをクリックしても選択は解除されない', () => {
       // アイテムを選択
       uiState.toggleSelection('file1')
       expect(uiState.selection.size).toBe(1)
@@ -77,16 +79,18 @@ describe('IconViewDOM', () => {
       expect(uiState.selection.size).toBeGreaterThanOrEqual(1)
     })
 
-    it('should do nothing when clicking empty area with no selection', () => {
+    it('選択がない状態で空白エリアをクリックしても何も起きない', () => {
       // 何も選択していない状態
       expect(uiState.selection.size).toBe(0)
 
       // onUpdate の呼び出し回数をリセット
       onUpdate.mockClear()
 
-      // 空白エリアをクリック
+      // 空白エリアをクリック（main要素）
+      const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+      expect(main).toBeTruthy()
       const clickEvent = new MouseEvent('click', { bubbles: true })
-      container.dispatchEvent(clickEvent)
+      main!.dispatchEvent(clickEvent)
 
       // onUpdate は呼ばれない（選択がないので）
       expect(onUpdate).not.toHaveBeenCalled()
@@ -95,7 +99,7 @@ describe('IconViewDOM', () => {
   })
 
   describe('キーボードショートカット - 切り取り', () => {
-    it('should focus item when clicked', () => {
+    it('クリックするとアイテムにフォーカスが移る', () => {
       // アイコンアイテムを取得
       const iconItem = container.querySelector<HTMLElement>('.icon-item')
       expect(iconItem).toBeTruthy()
@@ -108,7 +112,7 @@ describe('IconViewDOM', () => {
       expect(document.activeElement).toBe(iconItem)
     })
 
-    it('should preserve focus after DOM re-render', () => {
+    it('DOM再描画後もフォーカスが保持される', () => {
       // アイテムをクリックしてフォーカス
       const iconItem = container.querySelector<HTMLElement>('.icon-item')
       expect(iconItem).toBeTruthy()
@@ -125,7 +129,7 @@ describe('IconViewDOM', () => {
       expect(document.activeElement).toBe(newIconItem)
     })
 
-    it('should cut selected item with Ctrl+X', () => {
+    it('Ctrl+Xで選択したアイテムを切り取る', () => {
       // アイテムをクリックして選択
       const iconItem = container.querySelector<HTMLElement>('.icon-item')
       expect(iconItem).toBeTruthy()
@@ -148,7 +152,7 @@ describe('IconViewDOM', () => {
       expect(onUpdate).toHaveBeenCalled()
     })
 
-    it('should cut selected item with Cmd+X on Mac', () => {
+    it('Cmd+Xで選択したアイテムを切り取る（Mac）', () => {
       // アイテムをクリックして選択
       const iconItem = container.querySelector<HTMLElement>('.icon-item')
       expect(iconItem).toBeTruthy()
@@ -171,7 +175,7 @@ describe('IconViewDOM', () => {
       expect(onUpdate).toHaveBeenCalled()
     })
 
-    it('should cut multiple selected items with Cmd+X', () => {
+    it('Cmd+Xで複数選択したアイテムを切り取る', () => {
       // 複数のアイテムを選択
       uiState.toggleSelection('file1')
       uiState.toggleSelection('file2')
@@ -194,7 +198,7 @@ describe('IconViewDOM', () => {
       expect(onUpdate).toHaveBeenCalled()
     })
 
-    it('should do nothing when pressing Cmd+X without selection', () => {
+    it('選択がない状態でCmd+Xを押しても何も起きない', () => {
       // 何も選択していない状態
       expect(uiState.selection.size).toBe(0)
 
@@ -225,7 +229,7 @@ describe('IconViewDOM', () => {
   })
 
   describe('キーボードショートカット - 貼り付け（空のフォルダ）', () => {
-    it('should make container focusable for empty folders', () => {
+    it('空のフォルダでコンテナがフォーカス可能になる', () => {
       // フォルダに移動（空のフォルダをシミュレート）
       const folder = manager.root.children.find(n => n.type === 'folder')
       expect(folder).toBeTruthy()
@@ -234,11 +238,13 @@ describe('IconViewDOM', () => {
       // DOM再描画（空のフォルダなので子要素なし）
       createIconViewDOM(container, manager, uiState, onUpdate)
 
-      // コンテナがフォーカス可能になっているべき（tabIndexが設定されている）
-      expect(container.tabIndex).toBeGreaterThanOrEqual(0)
+      // main要素がフォーカス可能になっているべき（tabIndexが設定されている）
+      const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+      expect(main).toBeTruthy()
+      expect(main!.tabIndex).toBeGreaterThanOrEqual(0)
     })
 
-    it('should auto-focus container when navigating to empty folder', () => {
+    it('空のフォルダに移動すると自動的にコンテナにフォーカスが移る', () => {
       // フォルダに移動（空のフォルダをシミュレート）
       const folder = manager.root.children.find(n => n.type === 'folder')
       expect(folder).toBeTruthy()
@@ -247,11 +253,12 @@ describe('IconViewDOM', () => {
       // DOM再描画（空のフォルダなので子要素なし）
       createIconViewDOM(container, manager, uiState, onUpdate)
 
-      // 空のフォルダでは自動的にコンテナにフォーカスが移るべき
-      expect(document.activeElement).toBe(container)
+      // 空のフォルダでは自動的にmain要素にフォーカスが移るべき
+      const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+      expect(document.activeElement).toBe(main)
     })
 
-    it('should paste items in empty folder with Cmd+V without clicking', () => {
+    it('空のフォルダでクリックなしでCmd+Vでアイテムを貼り付ける', () => {
       // アイテムをクリップボードに入れる
       uiState.toggleSelection('file1')
       uiState.cut()
@@ -266,8 +273,9 @@ describe('IconViewDOM', () => {
       createIconViewDOM(container, manager, uiState, onUpdate)
       onUpdate.mockClear()
 
-      // 自動的にフォーカスが移っているはず（クリック不要）
-      expect(document.activeElement).toBe(container)
+      // 自動的にmain要素にフォーカスが移っているはず（クリック不要）
+      const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+      expect(document.activeElement).toBe(main)
 
       // Cmd+V キーイベントをディスパッチ
       const keyEvent = new KeyboardEvent('keydown', {
@@ -275,12 +283,39 @@ describe('IconViewDOM', () => {
         metaKey: true,
         bubbles: true
       })
-      container.dispatchEvent(keyEvent)
+      main!.dispatchEvent(keyEvent)
 
       // 貼り付けが実行されるべき
       expect(onUpdate).toHaveBeenCalled()
       // クリップボードがクリアされるべき
       expect(uiState.clipboard.size).toBe(0)
+    })
+  })
+
+  describe('セマンティック構造', () => {
+    it('main要素でaria-labelを持つ', () => {
+      const main = container.querySelector('main.icon-view-dom')
+      expect(main).toBeTruthy()
+      expect(main?.getAttribute('aria-label')).toBe('ファイル一覧')
+    })
+
+    it('アイコンアイテムがrole=buttonとaria-selected属性を持つ', () => {
+      const item = container.querySelector('.icon-item')
+      expect(item?.getAttribute('role')).toBe('button')
+      expect(item?.hasAttribute('aria-selected')).toBe(true)
+      expect(item?.hasAttribute('aria-label')).toBe(true)
+    })
+
+    it('選択されたアイテムのaria-selectedがtrueになる', () => {
+      uiState.toggleSelection('file1')
+      createIconViewDOM(container, manager, uiState, onUpdate)
+
+      const items = container.querySelectorAll('.icon-item')
+      const selectedItem = Array.from(items).find(item =>
+        (item as HTMLElement).dataset.nodeId === 'file1'
+      )
+
+      expect(selectedItem?.getAttribute('aria-selected')).toBe('true')
     })
   })
 })

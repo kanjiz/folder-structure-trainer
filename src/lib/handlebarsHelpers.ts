@@ -9,3 +9,6 @@ export function registerHandlebarsHelpers(): void {
   // 等価比較ヘルパー（テンプレート内で型比較に使用）
   Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b)
 }
+
+// このモジュールがインポートされた時点で自動的にヘルパーを登録
+registerHandlebarsHelpers()

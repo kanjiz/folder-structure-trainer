@@ -108,10 +108,13 @@ folder-structure-trainer/
 │   │   ├── IconView.ts            # アイコンビュー
 │   │   └── ContextMenu.ts         # コンテキストメニュー
 │   ├── templates/      # Handlebarsテンプレート
+│   │   ├── BreadcrumbView.hbs     # パンくずリストのHTML
+│   │   ├── ContextMenu.hbs        # コンテキストメニューのHTML
+│   │   ├── GameView.hbs           # ゲーム画面のHTML
+│   │   ├── IconView.hbs           # アイコンビューのHTML
+│   │   ├── ResultView.hbs         # 結果画面のHTML
 │   │   ├── SelectView.hbs         # 問題選択画面のHTML
-│   │   └── ResultView.hbs         # 結果画面のHTML
-│   ├── utils/          # ユーティリティ
-│   │   └── templateLoader.ts      # テンプレートローダー
+│   │   └── TreeView.hbs           # ツリービューのHTML
 │   ├── main.ts         # エントリーポイント
 │   └── style.css       # スタイルシート
 ├── docs/
@@ -184,41 +187,12 @@ npx tsc --noEmit
 
 ## テンプレートシステム
 
-### Handlebars テンプレート
+すべてのビューは、Handlebars テンプレートエンジンを使用して HTML を生成します。テンプレートファイルは `src/templates/` ディレクトリに配置されており、各ビューが Vite の `?raw` インポートで直接読み込んで使用します。
 
-SelectView と ResultView は、Handlebars テンプレートエンジンを使用して HTML を生成します。
-
-#### テンプレートファイルの場所
-
-テンプレートファイルは `src/templates/` ディレクトリに配置されています：
-
-- `SelectView.hbs`: 問題選択画面の HTML テンプレート
-- `ResultView.hbs`: 結果画面の HTML テンプレート
-
-#### テンプレートローダー
-
-`src/utils/templateLoader.ts` は、テンプレートファイルを動的に読み込み、コンパイルする機能を提供します：
-
-```typescript
-import { loadTemplate } from './utils/templateLoader'
-
-// テンプレートを読み込み（非同期）
-const template = await loadTemplate('SelectView')
-
-// データを渡してHTMLを生成
-const html = template({ questions: [...] })
-```
-
-**特徴**:
-
-- テンプレートは初回読み込み時にコンパイルされ、キャッシュされます
-- 2回目以降はキャッシュから取得されるため高速です
-- `clearTemplateCache()` でキャッシュをクリアできます（主にテスト用）
-
-#### テンプレートの利点
+**利点**:
 
 1. **関心の分離**: HTML 構造（テンプレート）とロジック（TypeScript）を分離
-2. **セマンティック HTML**: テンプレート内でセマンティック HTML（`main`, `header`, `section`, `footer`）を記述
+2. **セマンティック HTML**: テンプレート内でセマンティック HTML を記述
 3. **ARIA 属性の管理**: アクセシビリティ属性を一元管理
 4. **保守性**: HTML 構造の変更がテンプレートファイルのみで完結
 

@@ -1,5 +1,4 @@
-import { defineConfig } from 'vite'
-import handlebars from 'vite-plugin-handlebars'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   /**
@@ -8,21 +7,6 @@ export default defineConfig({
    * ビルド時のアセットパスがこのベースに基づいて生成される
    */
   base: '/folder-structure-trainer/',
-
-  /**
-   * プラグイン設定
-   */
-  plugins: [
-    handlebars({
-      helpers: {
-        /**
-         * Handlebarsの等価比較ヘルパー
-         * テンプレート内で値の比較を行うために使用
-         */
-        eq: (a: unknown, b: unknown) => a === b
-      }
-    })
-  ],
 
   /**
    * Vitestのテスト設定
@@ -37,5 +21,6 @@ export default defineConfig({
      * ViewコンポーネントのテストではDOM操作が必要なためjsdom環境を使用
      */
     environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
   },
 })

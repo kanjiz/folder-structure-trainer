@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createIconViewDOM } from './IconViewDOM'
 import { FileSystemManager } from '../models/FileSystemManager'
 import { UIStateManager } from '../models/UIStateManager'
@@ -289,6 +289,36 @@ describe('IconViewDOM', () => {
       expect(onUpdate).toHaveBeenCalled()
       // クリップボードがクリアされるべき
       expect(uiState.clipboard.size).toBe(0)
+    })
+  })
+
+  describe('空白エリアのコンテキストメニュー', () => {
+    afterEach(() => {
+      // コンテキストメニューが残っている場合はクリーンアップ
+      const menu = document.body.querySelector('.context-menu')
+      if (menu) menu.remove()
+    })
+
+    it('コンテナの空白エリアで右クリックするとデフォルト動作が抑制される', () => {
+      // containerそのもの（main.icon-view-domの外側）でcontextmenuを発火
+      // これはicon-panelのicon-view-domが占有していない空白部分のクリックを模擬する
+      const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
+      container.dispatchEvent(event)
+
+      expect(event.defaultPrevented).toBe(true)
+    })
+
+    it('コンテナの空白エリアで右クリックするとカスタムコンテキストメニューが表示される', () => {
+      const event = new MouseEvent('contextmenu', {
+        bubbles: true,
+        cancelable: true,
+        clientX: 100,
+        clientY: 100
+      })
+      container.dispatchEvent(event)
+
+      const menu = document.body.querySelector('.context-menu')
+      expect(menu).not.toBeNull()
     })
   })
 

@@ -3,9 +3,6 @@ import type { FileSystemManager } from '../models/FileSystemManager'
 import type { FSNode } from '../models/FileSystem'
 import treeViewTemplate from '../templates/TreeView.hbs?raw'
 
-// eqヘルパーを登録（テンプレートで型比較に使用）
-Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b)
-
 const compiledTemplate = Handlebars.compile(treeViewTemplate)
 
 /**

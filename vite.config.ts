@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import handlebars from 'vite-plugin-handlebars'
 
 export default defineConfig({
@@ -37,5 +37,6 @@ export default defineConfig({
      * ViewコンポーネントのテストではDOM操作が必要なためjsdom環境を使用
      */
     environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
   },
 })

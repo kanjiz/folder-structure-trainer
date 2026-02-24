@@ -8,8 +8,8 @@ import type { Question } from '../models/types'
 describe('ResultView', () => {
   let container: HTMLElement
   let mockQuestion: Question
-  let onBackToSelect: ReturnType<typeof vi.fn>
-  let onRetry: ReturnType<typeof vi.fn>
+  let onBackToSelect: ReturnType<typeof vi.fn<() => void>>
+  let onRetry: ReturnType<typeof vi.fn<() => void>>
 
   beforeEach(() => {
     container = document.createElement('div')
@@ -30,8 +30,8 @@ describe('ResultView', () => {
       answer: {}
     }
 
-    onBackToSelect = vi.fn()
-    onRetry = vi.fn()
+    onBackToSelect = vi.fn<() => void>()
+    onRetry = vi.fn<() => void>()
   })
 
   afterEach(() => {

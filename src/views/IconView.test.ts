@@ -11,7 +11,7 @@ describe('IconView', () => {
   let container: HTMLElement
   let manager: FileSystemManager
   let uiState: UIStateManager
-  let onUpdate: ReturnType<typeof vi.fn>
+  let onUpdate: ReturnType<typeof vi.fn<() => void>>
 
   beforeEach(() => {
     // コンテナ要素を作成
@@ -38,7 +38,7 @@ describe('IconView', () => {
     uiState = new UIStateManager(manager.root)
 
     // モックコールバック
-    onUpdate = vi.fn()
+    onUpdate = vi.fn<() => void>()
 
     // IconViewDOM を作成
     createIconView(container, manager, uiState, onUpdate)

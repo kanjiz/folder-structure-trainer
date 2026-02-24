@@ -5,6 +5,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderBreadcrumbView } from './BreadcrumbView'
 import { FileSystemManager } from '../models/FileSystemManager'
 import type { Question } from '../models/types'
+import type { FSNode } from '../models/FileSystem'
 
 const sampleQuestion: Question = {
   id: 'q001',
@@ -34,15 +35,15 @@ const sampleQuestion: Question = {
 describe('BreadcrumbView', () => {
   let container: HTMLElement
   let manager: FileSystemManager
-  let onNavigate: ReturnType<typeof vi.fn>
-  let onUpdate: ReturnType<typeof vi.fn>
+  let onNavigate: ReturnType<typeof vi.fn<(folder: FSNode) => void>>
+  let onUpdate: ReturnType<typeof vi.fn<() => void>>
 
   beforeEach(() => {
     container = document.createElement('div')
     manager = new FileSystemManager()
     manager.loadQuestion(sampleQuestion)
-    onNavigate = vi.fn()
-    onUpdate = vi.fn()
+    onNavigate = vi.fn<(folder: FSNode) => void>()
+    onUpdate = vi.fn<() => void>()
   })
 
   describe('パンくずリスト表示', () => {

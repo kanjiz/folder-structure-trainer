@@ -21,7 +21,6 @@
     "markdownlint-cli2": "^0.20.0",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
-    "vite-plugin-handlebars": "^2.0.0",
     "vitest": "^3.0.0"
   }
 }

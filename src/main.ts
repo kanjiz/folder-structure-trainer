@@ -3,6 +3,7 @@ import type { Question } from './models/types'
 import { renderSelectView } from './views/SelectView'
 import { renderGameView, destroyGameView } from './views/GameView'
 import { renderResultView } from './views/ResultView'
+import { registerHandlebarsHelpers } from './lib/handlebarsHelpers'
 
 /** 現在選択されている問題 */
 let currentQuestion: Question | null = null
@@ -53,5 +54,8 @@ async function navigateTo(screen: 'select' | 'game' | 'result'): Promise<void> {
       break
   }
 }
+
+// Handlebarsヘルパーを初期化
+registerHandlebarsHelpers()
 
 navigateTo('select')

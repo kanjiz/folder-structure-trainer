@@ -8,7 +8,7 @@ import type { Question } from '../models/types'
 describe('SelectView', () => {
   let container: HTMLElement
   let mockQuestions: Question[]
-  let onSelect: ReturnType<typeof vi.fn>
+  let onSelect: ReturnType<typeof vi.fn<(question: Question) => void>>
 
   beforeEach(() => {
     container = document.createElement('div')
@@ -41,7 +41,7 @@ describe('SelectView', () => {
       }
     ]
 
-    onSelect = vi.fn()
+    onSelect = vi.fn<(question: Question) => void>()
   })
 
   afterEach(() => {

@@ -4,7 +4,7 @@ import { FileSystemManager } from '../models/FileSystemManager'
 import { UIStateManager } from '../models/UIStateManager'
 import { renderTreeView, updateTreeView } from './TreeView'
 import { renderBreadcrumbView } from './BreadcrumbView'
-import { createIconViewDOM, destroyIconViewDOM } from './IconViewDOM'
+import { createIconView, destroyIconView } from './IconView'
 import Handlebars from 'handlebars'
 import gameViewTemplate from '../templates/GameView.hbs?raw'
 
@@ -63,7 +63,7 @@ export function renderGameView(
   const onUpdate = () => {
     renderBreadcrumbView(breadcrumbPanel, uiStateManager!.currentFolder, manager!, onNavigate, onUpdate)
     updateTreeView(treePanel, manager!, onUpdate)
-    createIconViewDOM(iconPanel, manager!, uiStateManager!, onUpdate)
+    createIconView(iconPanel, manager!, uiStateManager!, onUpdate)
 
     // Practice mode: auto-complete when all items are correctly placed
     if (question.mode === 'practice') {
@@ -77,7 +77,7 @@ export function renderGameView(
   // 初期レンダリング
   renderBreadcrumbView(breadcrumbPanel, uiStateManager.currentFolder, manager, onNavigate, onUpdate)
   renderTreeView(treePanel, manager, onUpdate)
-  createIconViewDOM(iconPanel, manager, uiStateManager, onUpdate)
+  createIconView(iconPanel, manager, uiStateManager, onUpdate)
 
   if (question.mode === 'exercise') {
     wrapper.querySelector('#check-btn')!.addEventListener('click', () => {
@@ -94,7 +94,7 @@ export function renderGameView(
  */
 export function destroyGameView(): void {
   if (iconPanelRef) {
-    destroyIconViewDOM(iconPanelRef)
+    destroyIconView(iconPanelRef)
     iconPanelRef = null
   }
   manager = null

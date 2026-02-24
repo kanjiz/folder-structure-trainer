@@ -2,12 +2,12 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { createIconViewDOM } from './IconViewDOM'
+import { createIconView } from './IconView'
 import { FileSystemManager } from '../models/FileSystemManager'
 import { UIStateManager } from '../models/UIStateManager'
 import type { Question } from '../models/types'
 
-describe('IconViewDOM', () => {
+describe('IconView', () => {
   let container: HTMLElement
   let manager: FileSystemManager
   let uiState: UIStateManager
@@ -41,7 +41,7 @@ describe('IconViewDOM', () => {
     onUpdate = vi.fn()
 
     // IconViewDOM を作成
-    createIconViewDOM(container, manager, uiState, onUpdate)
+    createIconView(container, manager, uiState, onUpdate)
   })
 
   describe('空白エリアクリックで選択解除', () => {
@@ -121,8 +121,8 @@ describe('IconViewDOM', () => {
       iconItem!.click()
       expect(document.activeElement).toBe(iconItem)
 
-      // DOM再描画（createIconViewDOMを再実行）
-      createIconViewDOM(container, manager, uiState, onUpdate)
+      // DOM再描画（createIconViewを再実行）
+      createIconView(container, manager, uiState, onUpdate)
 
       // 同じnodeIdの要素にフォーカスが保持されているべき
       const newIconItem = container.querySelector<HTMLElement>(`[data-node-id="${nodeId}"]`)
@@ -236,7 +236,7 @@ describe('IconViewDOM', () => {
       uiState.navigateToFolder(folder!)
 
       // DOM再描画（空のフォルダなので子要素なし）
-      createIconViewDOM(container, manager, uiState, onUpdate)
+      createIconView(container, manager, uiState, onUpdate)
 
       // main要素がフォーカス可能になっているべき（tabIndexが設定されている）
       const main = container.querySelector<HTMLElement>('main.icon-view-dom')
@@ -251,7 +251,7 @@ describe('IconViewDOM', () => {
       uiState.navigateToFolder(folder!)
 
       // DOM再描画（空のフォルダなので子要素なし）
-      createIconViewDOM(container, manager, uiState, onUpdate)
+      createIconView(container, manager, uiState, onUpdate)
 
       // 空のフォルダでは自動的にmain要素にフォーカスが移るべき
       const main = container.querySelector<HTMLElement>('main.icon-view-dom')
@@ -270,7 +270,7 @@ describe('IconViewDOM', () => {
       uiState.navigateToFolder(folder!)
 
       // DOM再描画（空のフォルダなので子要素なし）
-      createIconViewDOM(container, manager, uiState, onUpdate)
+      createIconView(container, manager, uiState, onUpdate)
       onUpdate.mockClear()
 
       // 自動的にmain要素にフォーカスが移っているはず（クリック不要）
@@ -338,7 +338,7 @@ describe('IconViewDOM', () => {
 
     it('選択されたアイテムのaria-selectedがtrueになる', () => {
       uiState.toggleSelection('file1')
-      createIconViewDOM(container, manager, uiState, onUpdate)
+      createIconView(container, manager, uiState, onUpdate)
 
       const items = container.querySelectorAll('.icon-item')
       const selectedItem = Array.from(items).find(item =>

@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { FileSystemManager } from '../models/FileSystemManager'
 import { renderTreeView } from './TreeView'

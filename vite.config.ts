@@ -14,13 +14,10 @@ export default defineConfig({
   test: {
     /**
      * テスト実行環境
-     * 'node': Node.js環境（DOM不要のユニットテスト向け）
-     * 'jsdom': ブラウザ環境をシミュレート（DOM操作が必要な場合）
-     * 'happy-dom': jsdomより高速なブラウザ環境シミュレート
-     *
-     * ViewコンポーネントのテストではDOM操作が必要なためjsdom環境を使用
+     * デフォルトはnode環境（DOM不要のユニットテスト向け）
+     * DOM操作が必要なViewテストは各ファイルで @vitest-environment jsdom を指定する
      */
-    environment: 'jsdom',
+    environment: 'node',
     setupFiles: ['./src/test/setup.ts'],
   },
 })

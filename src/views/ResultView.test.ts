@@ -45,7 +45,7 @@ describe('ResultView', () => {
         incorrect: []
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('5 / 5 正解')
@@ -57,7 +57,7 @@ describe('ResultView', () => {
         incorrect: ['file3', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('3 / 5 正解')
@@ -69,7 +69,7 @@ describe('ResultView', () => {
         incorrect: ['file1', 'file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const scoreElement = container.querySelector('.score')
       expect(scoreElement?.textContent).toBe('0 / 5 正解')
@@ -83,7 +83,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const correctItems = container.querySelectorAll('.result-correct')
       expect(correctItems).toHaveLength(1)
@@ -97,7 +97,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const incorrectItems = container.querySelectorAll('.result-incorrect')
       expect(incorrectItems).toHaveLength(4)
@@ -110,7 +110,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const allResultItems = container.querySelectorAll('.result-item')
       expect(allResultItems).toHaveLength(5)
@@ -129,7 +129,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const retryButton = container.querySelector('#retry-btn') as HTMLButtonElement
       expect(retryButton).toBeTruthy()
@@ -144,7 +144,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const selectButton = container.querySelector('#select-btn') as HTMLButtonElement
       expect(selectButton).toBeTruthy()
@@ -161,7 +161,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       // main要素
       const main = container.querySelector('main[role="main"]')
@@ -199,7 +199,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const retryButton = container.querySelector('#retry-btn') as HTMLButtonElement
       expect(retryButton.type).toBe('button')
@@ -214,7 +214,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder1', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const resultItems = container.querySelectorAll('.result-item')
       resultItems.forEach(item => {
@@ -229,7 +229,7 @@ describe('ResultView', () => {
         incorrect: ['file2', 'file3', 'folder2']
       }
 
-      await renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
+      renderResultView(container, mockQuestion, result, onBackToSelect, onRetry)
 
       const resultItems = container.querySelectorAll('.result-item')
 

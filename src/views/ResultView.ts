@@ -1,5 +1,9 @@
 import type { Question } from '../models/types'
-import { loadTemplate } from '../utils/templateLoader'
+import Handlebars from 'handlebars'
+import resultViewTemplate from '../templates/ResultView.hbs?raw'
+
+// テンプレートをコンパイル
+const compiledTemplate = Handlebars.compile(resultViewTemplate)
 
 /** チェックマーク（✓） */
 const CHECK_MARK = '\u2713'
@@ -27,16 +31,13 @@ type ResultStatus = {
  * @param onBackToSelect - 問題選択に戻るボタンのコールバック
  * @param onRetry - もう一度ボタンのコールバック
  */
-export async function renderResultView(
+export function renderResultView(
   container: HTMLElement,
   question: Question,
   result: { correct: string[]; incorrect: string[] },
   onBackToSelect: () => void,
   onRetry: () => void,
-): Promise<void> {
-  // テンプレートを読み込み
-  const template = await loadTemplate('ResultView')
-
+): void {
   // スコア計算
   const total = result.correct.length + result.incorrect.length
   const score = result.correct.length
@@ -73,7 +74,7 @@ export async function renderResultView(
   }
 
   // HTMLを生成してコンテナに挿入
-  const html = template(templateData)
+  const html = compiledTemplate(templateData)
   container.innerHTML = html
 
   // イベントリスナーを設定

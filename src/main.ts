@@ -43,7 +43,7 @@ async function navigateTo(screen: 'select' | 'game' | 'result'): Promise<void> {
       break
     case 'result':
       if (currentQuestion && lastResult) {
-        await renderResultView(
+        renderResultView(
           app,
           currentQuestion,
           lastResult,

@@ -198,6 +198,30 @@ describe('IconView', () => {
       expect(onUpdate).toHaveBeenCalled()
     })
 
+    it('アイコンパネルのコンテナにフォーカスがある状態でCtrl+Xが動作する', () => {
+      // アイテムを選択
+      uiState.toggleSelection('file1')
+      expect(uiState.selection.size).toBe(1)
+      expect(uiState.clipboard.size).toBe(0)
+
+      // コンテナ（main.icon-view-domの親要素）にフォーカスを移す
+      // アイコンパネルの空白部分（アイテムの下）をクリックした状態に相当する
+      container.tabIndex = 0
+      container.focus()
+
+      // Ctrl+Xキーイベントをコンテナにディスパッチ
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'x',
+        ctrlKey: true,
+        bubbles: true
+      })
+      container.dispatchEvent(keyEvent)
+
+      // コンテナにフォーカスがある状態でも切り取りができるべき
+      expect(uiState.clipboard.size).toBe(1)
+      expect(onUpdate).toHaveBeenCalled()
+    })
+
     it('選択がない状態でCmd+Xを押しても何も起きない', () => {
       // 何も選択していない状態
       expect(uiState.selection.size).toBe(0)

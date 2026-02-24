@@ -1,5 +1,9 @@
 import type { Question } from '../models/types'
-import { loadTemplate } from '../utils/templateLoader'
+import Handlebars from 'handlebars'
+import selectViewTemplate from '../templates/SelectView.hbs?raw'
+
+// テンプレートをコンパイル
+const compiledTemplate = Handlebars.compile(selectViewTemplate)
 
 /**
  * 問題選択画面をレンダリングします
@@ -10,14 +14,11 @@ import { loadTemplate } from '../utils/templateLoader'
  * @param questions - 表示する問題のリスト
  * @param onSelect - 問題選択時のコールバック
  */
-export async function renderSelectView(
+export function renderSelectView(
   container: HTMLElement,
   questions: Question[],
   onSelect: (question: Question) => void,
-): Promise<void> {
-  // テンプレートを読み込み
-  const template = await loadTemplate('SelectView')
-
+): void {
   // テンプレートデータを準備
   const templateData = {
     questions: questions.map(q => ({
@@ -29,7 +30,7 @@ export async function renderSelectView(
   }
 
   // HTMLを生成してコンテナに挿入
-  const html = template(templateData)
+  const html = compiledTemplate(templateData)
   container.innerHTML = html
 
   // イベントリスナーを設定

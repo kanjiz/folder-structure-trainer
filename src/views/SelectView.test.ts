@@ -50,14 +50,14 @@ describe('SelectView', () => {
 
   describe('問題カード表示', () => {
     it('全ての問題カードをレンダリングできる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const cards = container.querySelectorAll('.question-card')
       expect(cards).toHaveLength(3)
     })
 
     it('問題タイトルを正しく表示できる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const cards = container.querySelectorAll('.question-card')
       expect(cards[0].textContent).toContain('練習問題1')
@@ -66,7 +66,7 @@ describe('SelectView', () => {
     })
 
     it('問題がない場合は空のリストをレンダリングできる', async () => {
-      await renderSelectView(container, [], onSelect)
+      renderSelectView(container, [], onSelect)
 
       const cards = container.querySelectorAll('.question-card')
       expect(cards).toHaveLength(0)
@@ -75,7 +75,7 @@ describe('SelectView', () => {
 
   describe('モードバッジ表示', () => {
     it('練習モードの場合は練習バッジを表示できる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const badges = container.querySelectorAll('.mode-practice')
       expect(badges).toHaveLength(2) // q1 and q3
@@ -83,7 +83,7 @@ describe('SelectView', () => {
     })
 
     it('演習モードの場合は演習バッジを表示できる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const badges = container.querySelectorAll('.mode-exercise')
       expect(badges).toHaveLength(1) // q2
@@ -91,7 +91,7 @@ describe('SelectView', () => {
     })
 
     it('バッジに正しいCSSクラスを適用できる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const practiceBadge = container.querySelector('.mode-badge.mode-practice')
       expect(practiceBadge).toBeTruthy()
@@ -103,7 +103,7 @@ describe('SelectView', () => {
 
   describe('カードクリックイベント', () => {
     it('カードがクリックされた時にonSelectを呼び出せる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const cards = container.querySelectorAll('.question-card')
       const firstCard = cards[0] as HTMLButtonElement
@@ -115,7 +115,7 @@ describe('SelectView', () => {
     })
 
     it('各カードに対して正しい問題でonSelectを呼び出せる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const cards = container.querySelectorAll('.question-card')
 
@@ -134,7 +134,7 @@ describe('SelectView', () => {
 
   describe('構造とタイトル', () => {
     it('タイトルと説明をレンダリングできる', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const title = container.querySelector('h1')
       expect(title?.textContent).toBe('フォルダ構造トレーナー')
@@ -144,14 +144,14 @@ describe('SelectView', () => {
     })
 
     it('ラッパー要素にselect-viewクラスを持つ', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const wrapper = container.querySelector('.select-view')
       expect(wrapper).toBeTruthy()
     })
 
     it('question-listコンテナを持つ', async () => {
-      await renderSelectView(container, mockQuestions, onSelect)
+      renderSelectView(container, mockQuestions, onSelect)
 
       const list = container.querySelector('.question-list')
       expect(list).toBeTruthy()

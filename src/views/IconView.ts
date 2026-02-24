@@ -19,14 +19,19 @@ export function createIconView(
   uiState: UIStateManager,
   onUpdate: () => void
 ): void {
+  // コンテナをフォーカス可能にする（空の領域クリック後もキーボードショートカットが使えるように）
+  container.tabIndex = 0
+
   renderIconView(container, manager, uiState, onUpdate)
 
-  const main = container.querySelector<HTMLElement>('main.icon-view-dom')
-  if (!main) return
-
-  setupKeyboardShortcuts(main, manager, uiState, onUpdate)
+  // キーボードリスナーは永続コンテナに設定する（main.icon-view-domは毎回再生成されるため）
+  setupKeyboardShortcuts(container, manager, uiState, onUpdate)
   setupContextMenuForEmptyArea(container, uiState, manager, onUpdate)
-  setupEmptyAreaClick(main, uiState, onUpdate)
+
+  const main = container.querySelector<HTMLElement>('main.icon-view-dom')
+  if (main) {
+    setupEmptyAreaClick(main, uiState, onUpdate)
+  }
 }
 
 /**
@@ -465,12 +470,9 @@ function pasteItems(
  * IconViewを破棄
  */
 export function destroyIconView(container: HTMLElement): void {
-  // キーボードイベントハンドラをクリーンアップ
+  // キーボードイベントハンドラをクリーンアップ（コンテナから直接削除）
   if (keydownHandler) {
-    const main = container.querySelector<HTMLElement>('main.icon-view-dom')
-    if (main) {
-      main.removeEventListener('keydown', keydownHandler)
-    }
+    container.removeEventListener('keydown', keydownHandler)
     keydownHandler = null
   }
   // コンテキストメニューを閉じ、セットアップフラグをリセット

@@ -2,7 +2,7 @@ import type { FileSystemManager } from '../models/FileSystemManager'
 import type { UIStateManager } from '../models/UIStateManager'
 import { showContextMenu, hideContextMenu } from './ContextMenu'
 import Handlebars from 'handlebars'
-import iconViewTemplate from '../templates/IconViewDOM.hbs?raw'
+import iconViewTemplate from '../templates/IconView.hbs?raw'
 
 // キーボードイベントハンドラの参照を保持
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null
@@ -11,16 +11,15 @@ let keydownHandler: ((e: KeyboardEvent) => void) | null = null
 const compiledTemplate = Handlebars.compile(iconViewTemplate)
 
 /**
- * DOM版のIconView
- * 将来的に既存のIconView.tsと置き換える
+ * IconView
  */
-export function createIconViewDOM(
+export function createIconView(
   container: HTMLElement,
   manager: FileSystemManager,
   uiState: UIStateManager,
   onUpdate: () => void
 ): void {
-  renderIconViewDOM(container, manager, uiState, onUpdate)
+  renderIconView(container, manager, uiState, onUpdate)
 
   const main = container.querySelector<HTMLElement>('main.icon-view-dom')
   if (!main) return
@@ -33,7 +32,7 @@ export function createIconViewDOM(
 /**
  * IconViewを再描画
  */
-function renderIconViewDOM(
+function renderIconView(
   container: HTMLElement,
   manager: FileSystemManager,
   uiState: UIStateManager,
@@ -463,9 +462,9 @@ function pasteItems(
 }
 
 /**
- * IconViewDOMを破棄
+ * IconViewを破棄
  */
-export function destroyIconViewDOM(container: HTMLElement): void {
+export function destroyIconView(container: HTMLElement): void {
   // キーボードイベントハンドラをクリーンアップ
   if (keydownHandler) {
     const main = container.querySelector<HTMLElement>('main.icon-view-dom')

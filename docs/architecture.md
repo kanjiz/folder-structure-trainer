@@ -96,10 +96,10 @@ classDiagram
         +renderBreadcrumbView(container, currentFolder, manager, uiState, onNavigate, onUpdate): void
     }
 
-    class IconViewDOM {
+    class IconView {
         <<module>>
-        +createIconViewDOM(container, manager, uiState, onUpdate): void
-        +destroyIconViewDOM(container): void
+        +createIconView(container, manager, uiState, onUpdate): void
+        +destroyIconView(container): void
     }
 
     class ContextMenu {
@@ -141,14 +141,14 @@ classDiagram
     GameView ..> Question : uses
     GameView ..> TreeView : renders
     GameView ..> BreadcrumbView : renders
-    GameView ..> IconViewDOM : renders
+    GameView ..> IconView : renders
     TreeView ..> FileSystemManager : displays
     TreeView ..> UIStateManager : uses
     BreadcrumbView ..> FileSystemManager : displays
     BreadcrumbView ..> UIStateManager : uses
-    IconViewDOM ..> FileSystemManager : interacts
-    IconViewDOM ..> UIStateManager : manages
-    IconViewDOM ..> ContextMenu : uses
+    IconView ..> FileSystemManager : interacts
+    IconView ..> UIStateManager : manages
+    IconView ..> ContextMenu : uses
     SelectView ..> Question : selects
     SelectView ..> TemplateLoader : uses
     ResultView ..> CheckResult : displays
@@ -170,7 +170,7 @@ classDiagram
 - **GameView**: ゲーム画面全体を管理
 - **BreadcrumbView**: パンくずリストでナビゲーション
 - **TreeView**: フォルダ構造のツリー表示（ドロップ先として機能）
-- **IconViewDOM**: DOM ベースのアイコンビュー（ドラッグ&ドロップ、複数選択、キーボードショートカット対応）
+- **IconView**: DOM ベースのアイコンビュー（ドラッグ&ドロップ、複数選択、キーボードショートカット対応）
 - **ContextMenu**: 右クリックメニュー（切り取り、貼り付け）
 - **SelectView**: 問題選択画面（Handlebars テンプレート使用）
 - **ResultView**: 答え合わせ結果の表示（Handlebars テンプレート使用）
@@ -182,9 +182,9 @@ classDiagram
   - コンパイル結果をキャッシュして再利用
   - SelectView と ResultView が HTML 生成に使用
 
-## フォーカス管理戦略（IconViewDOM）
+## フォーカス管理戦略（IconView）
 
-キーボードショートカット（Ctrl+X / Cmd+X、Ctrl+V / Cmd+V）を機能させるため、IconViewDOM はフォーカス管理を実装しています。
+キーボードショートカット（Ctrl+X / Cmd+X、Ctrl+V / Cmd+V）を機能させるため、IconView はフォーカス管理を実装しています。
 
 ### 問題：なぜフォーカス管理が必要なのか
 
@@ -212,12 +212,12 @@ classDiagram
 
 ### 実装詳細
 
-#### createIconViewDOM（初期化処理）
+#### createIconView（初期化処理）
 
 この関数は、アイコンビューを作成するときに最初に呼ばれます。
 
 ```typescript
-export function createIconViewDOM(
+export function createIconView(
   container: HTMLElement,
   manager: FileSystemManager,
   uiState: UIStateManager,
@@ -226,7 +226,7 @@ export function createIconViewDOM(
   // コンテナをフォーカス可能にする（tabIndex = 0 で Tab キーで選択できるようになる）
   container.tabIndex = 0
 
-  renderIconViewDOM(container, manager, uiState, onUpdate)
+  renderIconView(container, manager, uiState, onUpdate)
   setupKeyboardShortcuts(container, manager, uiState, onUpdate)
   setupContextMenuForEmptyArea(container, uiState, manager, onUpdate)
   setupEmptyAreaClick(container, uiState, onUpdate)
@@ -235,12 +235,12 @@ export function createIconViewDOM(
 
 **ポイント**: `tabIndex = 0` を設定することで、コンテナ（アイテムを表示する領域）自体がフォーカスできるようになります。これにより、空のフォルダでもキーボードショートカットが使えます。
 
-#### renderIconViewDOM（画面の再描画とフォーカス保持）
+#### renderIconView（画面の再描画とフォーカス保持）
 
 この関数は、フォルダを開いたり、アイテムを移動したりして画面を更新するたびに呼ばれます。
 
 ```typescript
-function renderIconViewDOM(
+function renderIconView(
   container: HTMLElement,
   manager: FileSystemManager,
   uiState: UIStateManager,

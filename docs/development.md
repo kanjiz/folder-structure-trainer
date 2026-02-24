@@ -105,7 +105,7 @@ folder-structure-trainer/
 │   │   ├── ResultView.ts          # 結果画面
 │   │   ├── BreadcrumbView.ts      # パンくずリスト
 │   │   ├── TreeView.ts            # ツリー表示
-│   │   ├── IconViewDOM.ts         # アイコンビュー（DOM実装）
+│   │   ├── IconView.ts            # アイコンビュー
 │   │   └── ContextMenu.ts         # コンテキストメニュー
 │   ├── templates/      # Handlebarsテンプレート
 │   │   ├── SelectView.hbs         # 問題選択画面のHTML

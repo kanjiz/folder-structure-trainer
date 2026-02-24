@@ -26,7 +26,7 @@ export function createIconViewDOM(
   if (!main) return
 
   setupKeyboardShortcuts(main, manager, uiState, onUpdate)
-  setupContextMenuForEmptyArea(main, uiState, manager, onUpdate)
+  setupContextMenuForEmptyArea(container, uiState, manager, onUpdate)
   setupEmptyAreaClick(main, uiState, onUpdate)
 }
 
@@ -355,6 +355,10 @@ function setupContextMenuForEmptyArea(
   manager: FileSystemManager,
   onUpdate: () => void
 ): void {
+  // 同じコンテナに対して重複してリスナーを追加しない
+  if (container.dataset.contextMenuSetup === 'true') return
+  container.dataset.contextMenuSetup = 'true'
+
   container.addEventListener('contextmenu', async (e) => {
     // アイコンアイテム上でのクリックは無視
     const target = e.target as HTMLElement
@@ -470,6 +474,7 @@ export function destroyIconViewDOM(container: HTMLElement): void {
     }
     keydownHandler = null
   }
-  // コンテキストメニューを閉じる
+  // コンテキストメニューを閉じ、セットアップフラグをリセット
   hideContextMenu()
+  delete container.dataset.contextMenuSetup
 }

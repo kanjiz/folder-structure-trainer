@@ -36,7 +36,7 @@ describe('ContextMenu', () => {
         ]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menu = document.querySelector('.context-menu')
       expect(menu).toBeTruthy()
@@ -49,7 +49,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menu = document.querySelector('.context-menu') as HTMLElement
       expect(menu.style.left).toBe('100px')
@@ -67,7 +67,7 @@ describe('ContextMenu', () => {
         ]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menuItems = document.querySelectorAll('.context-menu-item')
       expect(menuItems).toHaveLength(3)
@@ -86,7 +86,7 @@ describe('ContextMenu', () => {
         ]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menuItems = document.querySelectorAll('.context-menu-item')
       expect(menuItems[0].classList.contains('disabled')).toBe(false)
@@ -101,7 +101,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menuItem = document.querySelector('.context-menu-item') as HTMLElement
       menuItem.click()
@@ -117,7 +117,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Disabled', disabled: true, onClick }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menuItem = document.querySelector('.context-menu-item') as HTMLElement
       menuItem.click()
@@ -132,7 +132,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menuItem = document.querySelector('.context-menu-item') as HTMLElement
       menuItem.click()
@@ -157,8 +157,8 @@ describe('ContextMenu', () => {
         ]
       }
 
-      await showContextMenu(options1)
-      await showContextMenu(options2)
+      showContextMenu(options1)
+      showContextMenu(options2)
 
       const menus = document.querySelectorAll('.context-menu')
       expect(menus).toHaveLength(1)
@@ -177,7 +177,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
       expect(document.querySelector('.context-menu')).toBeTruthy()
 
       hideContextMenu()
@@ -196,7 +196,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
       hideContextMenu()
       hideContextMenu()
 
@@ -215,7 +215,7 @@ describe('ContextMenu', () => {
         ]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menu = document.querySelector('.context-menu') as HTMLElement
       // getBoundingClientRect の幅を仮定して、位置が調整されているか確認
@@ -233,7 +233,7 @@ describe('ContextMenu', () => {
         ]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       const menu = document.querySelector('.context-menu') as HTMLElement
       expect(menu).toBeTruthy()
@@ -248,7 +248,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       // setTimeout後にイベントリスナーが登録されるため、待機
       await new Promise(resolve => setTimeout(resolve, 10))
@@ -267,7 +267,7 @@ describe('ContextMenu', () => {
         items: [{ label: 'Item 1', onClick: vi.fn() }]
       }
 
-      await showContextMenu(options)
+      showContextMenu(options)
 
       await new Promise(resolve => setTimeout(resolve, 10))
 

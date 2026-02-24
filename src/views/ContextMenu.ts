@@ -3,7 +3,11 @@
  * 右クリックメニューの表示・非表示を管理
  */
 
-import { loadTemplate } from '../utils/templateLoader'
+import Handlebars from 'handlebars'
+import contextMenuTemplate from '../templates/ContextMenu.hbs?raw'
+
+// テンプレートをコンパイル
+const compiledTemplate = Handlebars.compile(contextMenuTemplate)
 
 let currentMenu: HTMLElement | null = null
 
@@ -22,13 +26,12 @@ export interface ContextMenuItem {
 /**
  * コンテキストメニューを表示
  */
-export async function showContextMenu(options: ContextMenuOptions): Promise<void> {
+export function showContextMenu(options: ContextMenuOptions): void {
   // 既存のメニューがあれば削除
   hideContextMenu()
 
-  // テンプレートを読み込み
-  const template = await loadTemplate('ContextMenu')
-  const menuHtml = template({ items: options.items })
+  // テンプレートを描画
+  const menuHtml = compiledTemplate({ items: options.items })
 
   const tempDiv = document.createElement('div')
   tempDiv.innerHTML = menuHtml

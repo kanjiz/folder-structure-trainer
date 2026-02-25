@@ -6,7 +6,7 @@ import { renderGameView, destroyGameView } from './views/GameView'
 import { renderResultView } from './views/ResultView'
 import { registerHandlebarsHelpers } from './lib/handlebarsHelpers'
 
-/** 現在選択されている問題 */
+/** 現在選択されている設問 */
 let currentQuestion: Question | null = null
 /** 最後の答え合わせ結果 */
 let lastResult: { correct: string[]; incorrect: string[] } | null = null

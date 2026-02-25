@@ -22,7 +22,7 @@ let iconPanelRef: HTMLElement | null = null
 /**
  * ゲーム画面をレンダリングします
  * @param container - レンダリング先のコンテナ要素
- * @param question - 表示する問題データ
+ * @param question - 表示する設問データ
  * @param onComplete - 答え合わせ完了時のコールバック。正解・不正解のアイテムIDリストを受け取る
  * @param onBack - 戻るボタンクリック時のコールバック
  */

@@ -5,14 +5,14 @@ import { questions } from '../data/questions'
 /**
  * 静的データソース
  *
- * TypeScriptコード内の問題データ配列から問題を取得します。
+ * TypeScriptコード内の設問データ配列から設問を取得します。
  * 練習モードや開発環境で使用されます。
  */
 export class StaticDataSource implements QuestionDataSource {
   /**
-   * 全ての問題を取得
+   * 全ての設問を取得
    *
-   * @returns 問題のリスト
+   * @returns 設問のリスト
    */
   async getQuestions(): Promise<Question[]> {
     return questions

@@ -2,9 +2,9 @@ import type { Question } from '../models/types'
 import type { QuestionDataSource, ResultRepository } from './types'
 
 /**
- * 問題データ取得サービス
+ * 設問データ取得サービス
  *
- * データソースを抽象化し、環境に応じて適切なデータソースから問題を取得します。
+ * データソースを抽象化し、環境に応じて適切なデータソースから設問を取得します。
  * Dependency Injectionパターンにより、テストも容易になります。
  */
 export class QuestionService {
@@ -25,9 +25,9 @@ export class QuestionService {
   }
 
   /**
-   * 全ての問題を取得
+   * 全ての設問を取得
    *
-   * @returns 問題のリスト
+   * @returns 設問のリスト
    */
   async getQuestions(): Promise<Question[]> {
     return this.dataSource.getQuestions()
@@ -40,7 +40,7 @@ export class QuestionService {
    * 練習モード（resultRepoなし）では何もしません。
    *
    * @param userId - ユーザーID
-   * @param questionId - 問題ID
+   * @param questionId - 設問ID
    * @param result - 結果データ
    */
   async saveResult(userId: string, questionId: string, result: unknown): Promise<void> {

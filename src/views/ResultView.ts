@@ -26,9 +26,9 @@ type ResultStatus = {
  * Handlebarsテンプレートを使用してHTMLを生成します。
  *
  * @param container - レンダリング先のコンテナ要素
- * @param question - 実施した問題データ
+ * @param question - 実施した設問データ
  * @param result - 答え合わせの結果（正解・不正解のIDリスト）
- * @param onBackToSelect - 問題選択に戻るボタンのコールバック
+ * @param onBackToSelect - 設問選択に戻るボタンのコールバック
  * @param onRetry - もう一度ボタンのコールバック
  */
 export function renderResultView(

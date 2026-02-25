@@ -19,9 +19,9 @@ export class JsonFetchDataSource implements QuestionDataSource {
   }
 
   /**
-   * 全ての問題を取得
+   * 全ての設問を取得
    *
-   * @returns 問題のリスト
+   * @returns 設問のリスト
    * @throws 取得に失敗した場合
    */
   async getQuestions(): Promise<Question[]> {

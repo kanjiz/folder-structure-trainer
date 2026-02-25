@@ -26,7 +26,7 @@ export class FileSystemManager {
    * FileSystemManagerのコンストラクタ
    *
    * 空のファイルシステムを初期化します。
-   * 実際の問題データは loadQuestion() で読み込みます。
+   * 実際の設問データは loadQuestion() で読み込みます。
    */
   constructor() {
     this.root = new FSNode('root', 'root', 'folder')
@@ -34,13 +34,13 @@ export class FileSystemManager {
   }
 
   /**
-   * 問題データを読み込み、ファイルシステムを初期化します
+   * 設問データを読み込み、ファイルシステムを初期化します
    *
-   * 既存のツリー構造をリセットし、問題データから新しいノードを生成します。
+   * 既存のツリー構造をリセットし、設問データから新しいノードを生成します。
    * すべてのアイテムは最初、ルート直下に配置されます（未整理状態）。
    * ユーザーはこれらを正しいフォルダに移動させることで問題を解きます。
    *
-   * @param question - 読み込む問題データ（アイテムリストを含む）
+   * @param question - 読み込む設問データ（アイテムリストを含む）
    *
    * @example
    * const question = {

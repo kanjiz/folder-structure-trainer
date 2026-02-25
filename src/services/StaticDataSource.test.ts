@@ -3,7 +3,7 @@ import { StaticDataSource } from './StaticDataSource'
 
 describe('StaticDataSource', () => {
   describe('getQuestions', () => {
-    it('全ての問題を取得できる', async () => {
+    it('全ての設問を取得できる', async () => {
       const dataSource = new StaticDataSource()
       const questions = await dataSource.getQuestions()
 
@@ -11,7 +11,7 @@ describe('StaticDataSource', () => {
       expect(questions.length).toBeGreaterThan(0)
     })
 
-    it('取得した問題が正しい形式を持つ', async () => {
+    it('取得した設問が正しい形式を持つ', async () => {
       const dataSource = new StaticDataSource()
       const questions = await dataSource.getQuestions()
 

@@ -6,13 +6,13 @@ import selectViewTemplate from '../templates/SelectView.hbs?raw'
 const compiledTemplate = Handlebars.compile(selectViewTemplate)
 
 /**
- * 問題選択画面をレンダリングします
+ * 設問選択画面をレンダリングします
  *
  * Handlebarsテンプレートを使用してHTMLを生成します。
  *
  * @param container - レンダリング先のコンテナ要素
- * @param questions - 表示する問題のリスト
- * @param onSelect - 問題選択時のコールバック
+ * @param questions - 表示する設問のリスト
+ * @param onSelect - 設問選択時のコールバック
  */
 export function renderSelectView(
   container: HTMLElement,

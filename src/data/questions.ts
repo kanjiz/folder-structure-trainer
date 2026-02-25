@@ -1,8 +1,8 @@
 import type { Question } from '../models/types'
 
 /**
- * フォルダ構造トレーニングの問題データ配列
- * 練習モード（practice）と演習モード（exercise）の問題が含まれます
+ * フォルダ構造トレーニングの設問データ配列
+ * 練習モード（practice）と演習モード（exercise）の設問が含まれます
  */
 export const questions: Question[] = [
   {

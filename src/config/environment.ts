@@ -51,7 +51,7 @@ export function createDataSource(): QuestionDataSource {
 /**
  * 結果保存が有効かどうか
  *
- * 現在の環境で問題の結果保存機能が有効かを判定します。
+ * 現在の環境で設問の結果保存機能が有効かを判定します。
  * gas環境のみtrueを返します。
  *
  * @returns 結果保存が有効な場合true

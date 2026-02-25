@@ -7,9 +7,9 @@ import type { Question } from '../models/types'
  */
 export interface QuestionDataSource {
   /**
-   * 全ての問題を取得
+   * 全ての設問を取得
    *
-   * @returns 問題のリスト
+   * @returns 設問のリスト
    */
   getQuestions(): Promise<Question[]>
 }
@@ -24,7 +24,7 @@ export interface ResultRepository {
    * 結果を保存
    *
    * @param userId - ユーザーID
-   * @param questionId - 問題ID
+   * @param questionId - 設問ID
    * @param result - 結果データ（構造は環境依存のため型指定なし）
    */
   saveResult(userId: string, questionId: string, result: unknown): Promise<void>

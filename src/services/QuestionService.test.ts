@@ -36,7 +36,7 @@ function createMockResultRepo(): ResultRepository {
 
 describe('QuestionService', () => {
   describe('getQuestions', () => {
-    it('データソースから問題を取得できる', async () => {
+    it('データソースから設問を取得できる', async () => {
       const dataSource = createMockDataSource()
       const service = new QuestionService(dataSource)
 

@@ -16,9 +16,11 @@
 ### 対象（このPR）
 
 - `IQuestionDataSource` → `QuestionDataSource` へのリネーム（全参照箇所）
+- `getQuestionById` をインターフェース・`StaticDataSource`・`QuestionService` から削除（未使用）
 - `public/questions.json` の作成（`questions.ts` のデータを移植）
 - `JsonFetchDataSource` の新規作成
 - `main.ts` の非同期化（`QuestionService` + `JsonFetchDataSource` 経由に変更）
+- `main.ts` から `questions.ts` への直接 import を削除
 - ローディング・エラー状態の簡易UI
 
 ### 対象外（将来のGAS統合時）
@@ -36,15 +38,15 @@ public/
   questions.json                     ← 新規（設問データ）
 src/
   data/
-    questions.ts                     ← 残す（StaticDataSourceが参照、テスト用途）
+    questions.ts       ← 残す（StaticDataSource専用、main.tsは参照しない）
   services/
     types.ts       ← IQuestionDataSource → QuestionDataSource にリネーム
-    StaticDataSource.ts              ← 型参照のリネームのみ
-    StaticDataSource.test.ts         ← 型参照のリネームのみ
+    StaticDataSource.ts    ← getQuestionById 削除・型参照リネーム
+    StaticDataSource.test.ts ← getQuestionById テスト削除・型参照リネーム
     JsonFetchDataSource.ts           ← 新規
     JsonFetchDataSource.test.ts      ← 新規
-    QuestionService.ts               ← 型参照のリネームのみ
-    QuestionService.test.ts          ← 型参照のリネームのみ
+    QuestionService.ts     ← getQuestionById 削除・型参照リネーム
+    QuestionService.test.ts ← getQuestionById テスト削除・型参照リネーム
   main.ts                            ← 非同期化
 ```
 
@@ -72,11 +74,6 @@ export class JsonFetchDataSource implements QuestionDataSource {
       throw new Error(`設問データの取得に失敗しました: ${response.status}`)
     }
     return response.json() as Promise<Question[]>
-  }
-
-  async getQuestionById(id: string): Promise<Question | null> {
-    const questions = await this.getQuestions()
-    return questions.find(q => q.id === id) ?? null
   }
 }
 ```
@@ -132,12 +129,11 @@ async function init(): Promise<void> {
 
 - `fetch` をモックし、正常レスポンス時に `Question[]` が返ることを確認
 - `fetch` が `ok: false` のレスポンスを返した場合に `Error` がスローされることを確認
-- `getQuestionById` が存在するIDで正しい設問を返すことを確認
-- `getQuestionById` が存在しないIDで `null` を返すことを確認
 
 ### 既存テストの修正
 
-- `IQuestionDataSource` → `QuestionDataSource` のリネームに伴う参照修正のみ
+- `IQuestionDataSource` → `QuestionDataSource` のリネームに伴う参照修正
+- `getQuestionById` 関連テストの削除（`StaticDataSource.test.ts`・`QuestionService.test.ts`）
 
 ## 実装順序（TDD）
 

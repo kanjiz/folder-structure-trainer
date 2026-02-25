@@ -77,6 +77,36 @@ classDiagram
         Record~string,AnswerTreeNode~
     }
 
+    %% サービス層
+    class QuestionDataSource {
+        <<interface>>
+        +getQuestions(): Promise~Question[]~
+    }
+
+    class ResultRepository {
+        <<interface>>
+        +saveResult(userId, questionId, result): Promise~void~
+    }
+
+    class StaticDataSource {
+        +getQuestions(): Promise~Question[]~
+    }
+
+    class JsonFetchDataSource {
+        -string url
+        +getQuestions(): Promise~Question[]~
+    }
+
+    class QuestionService {
+        +getQuestions(): Promise~Question[]~
+        +saveResult(userId, questionId, result): Promise~void~
+    }
+
+    class createDataSource {
+        <<function>>
+        +createDataSource(): QuestionDataSource
+    }
+
     %% ビュー層
     class GameView {
         <<module>>
@@ -110,7 +140,7 @@ classDiagram
 
     class SelectView {
         <<module>>
-        +renderSelectView(container, onSelect): void
+        +renderSelectView(container, questions, onSelect): void
     }
 
     class ResultView {
@@ -145,6 +175,12 @@ classDiagram
     IconView ..> ContextMenu : uses
     SelectView ..> Question : selects
     ResultView ..> CheckResult : displays
+    StaticDataSource ..|> QuestionDataSource : implements
+    JsonFetchDataSource ..|> QuestionDataSource : implements
+    QuestionService --> QuestionDataSource : uses
+    QuestionService --> ResultRepository : uses (optional)
+    createDataSource ..> QuestionDataSource : returns
+    createDataSource ..> JsonFetchDataSource : creates
 ```
 
 ## 主要コンポーネント
@@ -156,6 +192,15 @@ classDiagram
 - **UIStateManager**: UI状態管理（選択、クリップボード、現在フォルダ）。データ層とUI層を分離
 - **Question**: 問題データの定義（アイテム、指示、正解ツリーを含む）
 - **AnswerTree**: 正解のフォルダ構造を明示的な型フィールドで表現
+
+### サービス層
+
+- **QuestionDataSource**: 設問取得のインターフェース。環境に応じた実装に切り替えられる
+- **ResultRepository**: 結果保存のインターフェース。GAS 環境でのみ実装される
+- **StaticDataSource**: TypeScript コード内の設問データから取得する実装（`src/data/questions.ts`）
+- **JsonFetchDataSource**: `fetch` API で JSON ファイルを取得する実装（`public/questions.json`）
+- **QuestionService**: データソースを抽象化し、設問取得・結果保存を提供するサービスクラス
+- **createDataSource**: 環境変数 `VITE_ENV` に応じて適切なデータソースを生成するファクトリー関数（`src/config/environment.ts`）
 
 ### ビュー層
 

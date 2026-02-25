@@ -66,7 +66,7 @@ export interface ResultRepository {
 }
 ```
 
-**分割の理由**
+#### 分割の理由
 
 - `JsonFetchDataSource` は取得専用であり、`saveResult` を実装しない
 - `GasDataSource`（将来）は両インターフェースを実装する

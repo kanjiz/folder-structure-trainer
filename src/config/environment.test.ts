@@ -30,11 +30,6 @@ describe('environment', () => {
       expect(getEnvironment()).toBe('development')
     })
 
-    it('VITE_ENVがgithub-pagesの場合、github-pagesを返す', () => {
-      import.meta.env.VITE_ENV = 'github-pages'
-      expect(getEnvironment()).toBe('github-pages')
-    })
-
     it('VITE_ENVがgasの場合、gasを返す', () => {
       import.meta.env.VITE_ENV = 'gas'
       expect(getEnvironment()).toBe('gas')
@@ -44,12 +39,6 @@ describe('environment', () => {
   describe('createDataSource', () => {
     it('development環境でJsonFetchDataSourceを返す', () => {
       import.meta.env.VITE_ENV = 'development'
-      const dataSource = createDataSource()
-      expect(dataSource).toBeInstanceOf(JsonFetchDataSource)
-    })
-
-    it('github-pages環境でJsonFetchDataSourceを返す', () => {
-      import.meta.env.VITE_ENV = 'github-pages'
       const dataSource = createDataSource()
       expect(dataSource).toBeInstanceOf(JsonFetchDataSource)
     })
@@ -65,11 +54,6 @@ describe('environment', () => {
   describe('isResultSavingEnabled', () => {
     it('development環境でfalseを返す', () => {
       import.meta.env.VITE_ENV = 'development'
-      expect(isResultSavingEnabled()).toBe(false)
-    })
-
-    it('github-pages環境でfalseを返す', () => {
-      import.meta.env.VITE_ENV = 'github-pages'
       expect(isResultSavingEnabled()).toBe(false)
     })
 

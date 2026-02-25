@@ -6,10 +6,9 @@ import { JsonFetchDataSource } from '../services/JsonFetchDataSource'
  *
  * アプリケーションが動作する環境を識別します。
  * - development: 開発環境
- * - github-pages: GitHub Pagesでの練習モード
  * - gas: Google Apps Scriptでの本番モード
  */
-export type Environment = 'development' | 'github-pages' | 'gas'
+export type Environment = 'development' | 'gas'
 
 /**
  * 現在の環境を取得
@@ -41,7 +40,6 @@ export function createDataSource(): QuestionDataSource {
       // 将来的にGASDataSourceを実装
       // return new GASDataSource()
       throw new Error('GASDataSource is not implemented yet')
-    case 'github-pages':
     case 'development':
     default:
       return new JsonFetchDataSource(`${import.meta.env.BASE_URL}questions.json`)

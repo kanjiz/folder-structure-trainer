@@ -12,7 +12,7 @@ export class JsonFetchDataSource implements QuestionDataSource {
   private readonly url: string
 
   /**
-   * @param url - JSONファイルのURL（例: '/questions.json'）
+   * @param url - JSONファイルのURL（例: `${import.meta.env.BASE_URL}questions.json`）
    */
   constructor(url: string) {
     this.url = url
@@ -22,7 +22,7 @@ export class JsonFetchDataSource implements QuestionDataSource {
    * 全ての設問を取得
    *
    * @returns 設問のリスト
-   * @throws 取得に失敗した場合
+   * @throws HTTPステータスが200番台以外の場合（例: 404, 500）
    */
   async getQuestions(): Promise<Question[]> {
     const response = await fetch(this.url)

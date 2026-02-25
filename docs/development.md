@@ -86,44 +86,62 @@ npm run test:watch
 すべての `.test.ts` ファイルがテスト対象です：
 
 - `src/models/*.test.ts`: モデル層のテスト
+- `src/services/*.test.ts`: サービス層のテスト
+- `src/config/*.test.ts`: 環境設定のテスト
+- `src/lib/*.test.ts`: ユーティリティのテスト
 - `src/views/*.test.ts`: ビュー層のテスト
 
 ## プロジェクト構造
 
 ```tree
 folder-structure-trainer/
+├── public/
+│   └── questions.json             # 設問データ（JSONファイル）
 ├── src/
-│   ├── data/           # 問題データ
-│   │   └── questions.ts
+│   ├── config/         # 環境設定
+│   │   └── environment.ts         # 環境判定・データソースファクトリー
+│   ├── data/           # 静的設問データ（TypeScript）
+│   │   └── questions.ts           # StaticDataSource 用データ
+│   ├── lib/            # ユーティリティ
+│   │   └── handlebarsHelpers.ts   # Handlebars カスタムヘルパー
 │   ├── models/         # データモデル
-│   │   ├── FileSystem.ts          # 型定義とFSNodeクラス
+│   │   ├── FileSystem.ts          # 型定義と FSNode クラス
 │   │   ├── FileSystemManager.ts   # ファイルシステム管理
-│   │   └── UIStateManager.ts      # UI状態管理
+│   │   ├── UIStateManager.ts      # UI 状態管理
+│   │   └── types.ts               # Question・AnswerTree 等の型定義
+│   ├── services/       # サービス層
+│   │   ├── types.ts               # QuestionDataSource・ResultRepository インターフェース
+│   │   ├── StaticDataSource.ts    # 静的データソース（TypeScript データ）
+│   │   ├── JsonFetchDataSource.ts # JSON フェッチデータソース
+│   │   └── QuestionService.ts     # 設問取得・結果保存サービス
+│   ├── templates/      # Handlebars テンプレート
+│   │   ├── BreadcrumbView.hbs     # パンくずリストの HTML
+│   │   ├── ContextMenu.hbs        # コンテキストメニューの HTML
+│   │   ├── GameView.hbs           # ゲーム画面の HTML
+│   │   ├── IconView.hbs           # アイコンビューの HTML
+│   │   ├── ResultView.hbs         # 結果画面の HTML
+│   │   ├── SelectView.hbs         # 設問選択画面の HTML
+│   │   └── TreeView.hbs           # ツリービューの HTML
+│   ├── test/           # テスト共通設定
+│   │   └── setup.ts               # Vitest セットアップファイル
 │   ├── views/          # ビューコンポーネント
 │   │   ├── GameView.ts            # ゲーム画面
-│   │   ├── SelectView.ts          # 問題選択画面
+│   │   ├── SelectView.ts          # 設問選択画面
 │   │   ├── ResultView.ts          # 結果画面
 │   │   ├── BreadcrumbView.ts      # パンくずリスト
 │   │   ├── TreeView.ts            # ツリー表示
 │   │   ├── IconView.ts            # アイコンビュー
 │   │   └── ContextMenu.ts         # コンテキストメニュー
-│   ├── templates/      # Handlebarsテンプレート
-│   │   ├── BreadcrumbView.hbs     # パンくずリストのHTML
-│   │   ├── ContextMenu.hbs        # コンテキストメニューのHTML
-│   │   ├── GameView.hbs           # ゲーム画面のHTML
-│   │   ├── IconView.hbs           # アイコンビューのHTML
-│   │   ├── ResultView.hbs         # 結果画面のHTML
-│   │   ├── SelectView.hbs         # 問題選択画面のHTML
-│   │   └── TreeView.hbs           # ツリービューのHTML
 │   ├── main.ts         # エントリーポイント
 │   └── style.css       # スタイルシート
 ├── docs/
-│   ├── architecture.md # アーキテクチャドキュメント
-│   └── plans/          # 設計ドキュメント
-├── index.html          # HTMLテンプレート
+│   ├── architecture.md            # アーキテクチャドキュメント
+│   ├── development.md             # 開発ガイド（このファイル）
+│   └── plans/                     # 設計ドキュメント
+├── index.html          # HTML テンプレート
 ├── package.json        # プロジェクト設定とスクリプト
-├── tsconfig.json       # TypeScript設定
-└── vite.config.ts      # Vite設定
+├── tsconfig.json       # TypeScript 設定
+└── vite.config.ts      # Vite 設定
 ```
 
 ## TypeScript 設定
@@ -184,6 +202,33 @@ import { FileSystemManager } from './FileSystemManager'
 ```bash
 npx tsc --noEmit
 ```
+
+## データソース
+
+設問データは `public/questions.json` に JSON 形式で保存されており、`fetch` API で取得します。
+
+### データフロー
+
+```text
+public/questions.json
+  └─ fetch API
+       └─ JsonFetchDataSource
+            └─ QuestionService
+                 └─ main.ts → SelectView
+```
+
+### 環境とデータソースの切り替え
+
+`src/config/environment.ts` の `createDataSource()` が環境変数 `VITE_ENV` に応じて実装を切り替えます：
+
+| `VITE_ENV` の値               | 使用するデータソース  | 説明                                       |
+| ----------------------------- | --------------------- | ------------------------------------------ |
+| `development`（デフォルト）   | `JsonFetchDataSource` | `public/questions.json` を `fetch` で取得  |
+| `gas`                         | （将来実装）          | Google Apps Script から取得                |
+
+### 設問データの追加・編集
+
+`public/questions.json` を直接編集します。スキーマは `src/models/types.ts` の `Question` 型に準拠します。
 
 ## テンプレートシステム
 

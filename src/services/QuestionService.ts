@@ -1,5 +1,5 @@
 import type { Question } from '../models/types'
-import type { IQuestionDataSource } from './types'
+import type { QuestionDataSource, ResultRepository } from './types'
 
 /**
  * 問題データ取得サービス
@@ -8,18 +8,20 @@ import type { IQuestionDataSource } from './types'
  * Dependency Injectionパターンにより、テストも容易になります。
  */
 export class QuestionService {
-  /**
-   * データソースの実装
-   */
-  private dataSource: IQuestionDataSource
+  /** 設問取得の実装 */
+  private readonly dataSource: QuestionDataSource
+  /** 結果保存の実装（省略時はsaveResultが何もしない） */
+  private readonly resultRepo: ResultRepository | undefined
 
   /**
    * QuestionServiceのコンストラクタ
    *
-   * @param dataSource - データソースの実装
+   * @param dataSource - 設問取得の実装
+   * @param resultRepo - 結果保存の実装（省略時はsaveResultが何もしない）
    */
-  constructor(dataSource: IQuestionDataSource) {
+  constructor(dataSource: QuestionDataSource, resultRepo?: ResultRepository) {
     this.dataSource = dataSource
+    this.resultRepo = resultRepo
   }
 
   /**
@@ -32,28 +34,18 @@ export class QuestionService {
   }
 
   /**
-   * 特定の問題を取得
-   *
-   * @param id - 問題ID
-   * @returns 問題（見つからない場合はnull）
-   */
-  async getQuestionById(id: string): Promise<Question | null> {
-    return this.dataSource.getQuestionById(id)
-  }
-
-  /**
    * 結果を保存
    *
-   * データソースがsaveResultを実装している場合のみ保存します。
-   * 練習モードではこのメソッドは何もしません。
+   * resultRepoが渡されている場合のみ保存します。
+   * 練習モード（resultRepoなし）では何もしません。
    *
    * @param userId - ユーザーID
    * @param questionId - 問題ID
    * @param result - 結果データ
    */
   async saveResult(userId: string, questionId: string, result: unknown): Promise<void> {
-    if (this.dataSource.saveResult) {
-      await this.dataSource.saveResult(userId, questionId, result)
+    if (this.resultRepo) {
+      await this.resultRepo.saveResult(userId, questionId, result)
     }
   }
 }

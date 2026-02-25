@@ -1,6 +1,6 @@
 import type { Question } from './models/types'
-import { JsonFetchDataSource } from './services/JsonFetchDataSource'
 import { QuestionService } from './services/QuestionService'
+import { createDataSource } from './config/environment'
 import { renderSelectView } from './views/SelectView'
 import { renderGameView, destroyGameView } from './views/GameView'
 import { renderResultView } from './views/ResultView'
@@ -71,7 +71,7 @@ async function init(): Promise<void> {
   app.innerHTML = '<p>読み込み中...</p>'
 
   try {
-    const dataSource = new JsonFetchDataSource(`${import.meta.env.BASE_URL}questions.json`)
+    const dataSource = createDataSource()
     const questionService = new QuestionService(dataSource)
     questions = await questionService.getQuestions()
     navigateTo('select')

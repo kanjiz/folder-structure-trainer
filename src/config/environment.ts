@@ -1,5 +1,5 @@
 import type { QuestionDataSource } from '../services/types'
-import { StaticDataSource } from '../services/StaticDataSource'
+import { JsonFetchDataSource } from '../services/JsonFetchDataSource'
 
 /**
  * 環境タイプ
@@ -29,7 +29,7 @@ export function getEnvironment(): Environment {
  *
  * 現在の環境に基づいて適切なデータソース実装を返します。
  * - gas環境: GASDataSource（将来実装）
- * - それ以外: StaticDataSource
+ * - それ以外: JsonFetchDataSource（`public/questions.json` を参照）
  *
  * @returns データソースの実装
  */
@@ -44,7 +44,7 @@ export function createDataSource(): QuestionDataSource {
     case 'github-pages':
     case 'development':
     default:
-      return new StaticDataSource()
+      return new JsonFetchDataSource(`${import.meta.env.BASE_URL}questions.json`)
   }
 }
 

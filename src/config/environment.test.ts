@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { getEnvironment, createDataSource, isResultSavingEnabled } from './environment'
-import { StaticDataSource } from '../services/StaticDataSource'
+import { JsonFetchDataSource } from '../services/JsonFetchDataSource'
 
 describe('environment', () => {
   // 環境変数のバックアップ
@@ -42,16 +42,16 @@ describe('environment', () => {
   })
 
   describe('createDataSource', () => {
-    it('development環境でStaticDataSourceを返す', () => {
+    it('development環境でJsonFetchDataSourceを返す', () => {
       import.meta.env.VITE_ENV = 'development'
       const dataSource = createDataSource()
-      expect(dataSource).toBeInstanceOf(StaticDataSource)
+      expect(dataSource).toBeInstanceOf(JsonFetchDataSource)
     })
 
-    it('github-pages環境でStaticDataSourceを返す', () => {
+    it('github-pages環境でJsonFetchDataSourceを返す', () => {
       import.meta.env.VITE_ENV = 'github-pages'
       const dataSource = createDataSource()
-      expect(dataSource).toBeInstanceOf(StaticDataSource)
+      expect(dataSource).toBeInstanceOf(JsonFetchDataSource)
     })
 
     // GASDataSourceは将来実装

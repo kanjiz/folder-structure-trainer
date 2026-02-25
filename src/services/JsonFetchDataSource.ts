@@ -4,8 +4,9 @@ import type { QuestionDataSource } from './types'
 /**
  * JSONファイルから設問を取得するデータソース
  *
- * `fetch` APIを使用してJSONファイルを取得します。
- * Viteの開発サーバー・本番ビルド両方で `public/questions.json` を参照します。
+ * `public/` ディレクトリに配置したJSONファイルを `fetch` APIで取得します。
+ * URLには `${import.meta.env.BASE_URL}questions.json` のように `BASE_URL` を起点にすることで、
+ * 開発・本番両環境で正しく動作します。
  */
 export class JsonFetchDataSource implements QuestionDataSource {
   /** JSONファイルのURL */

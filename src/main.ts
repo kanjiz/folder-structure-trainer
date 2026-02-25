@@ -71,7 +71,7 @@ async function init(): Promise<void> {
   app.innerHTML = '<p>読み込み中...</p>'
 
   try {
-    const dataSource = new JsonFetchDataSource('/questions.json')
+    const dataSource = new JsonFetchDataSource(`${import.meta.env.BASE_URL}questions.json`)
     const questionService = new QuestionService(dataSource)
     questions = await questionService.getQuestions()
     navigateTo('select')

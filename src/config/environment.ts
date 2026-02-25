@@ -1,4 +1,4 @@
-import type { IQuestionDataSource } from '../services/types'
+import type { QuestionDataSource } from '../services/types'
 import { StaticDataSource } from '../services/StaticDataSource'
 
 /**
@@ -33,7 +33,7 @@ export function getEnvironment(): Environment {
  *
  * @returns データソースの実装
  */
-export function createDataSource(): IQuestionDataSource {
+export function createDataSource(): QuestionDataSource {
   const env = getEnvironment()
 
   switch (env) {

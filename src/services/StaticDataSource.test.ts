@@ -24,21 +24,4 @@ describe('StaticDataSource', () => {
       expect(firstQuestion).toHaveProperty('answer')
     })
   })
-
-  describe('getQuestionById', () => {
-    it('指定したIDの問題を取得できる', async () => {
-      const dataSource = new StaticDataSource()
-      const question = await dataSource.getQuestionById('q001')
-
-      expect(question).toBeDefined()
-      expect(question?.id).toBe('q001')
-    })
-
-    it('存在しないIDの場合nullを返す', async () => {
-      const dataSource = new StaticDataSource()
-      const question = await dataSource.getQuestionById('nonexistent')
-
-      expect(question).toBeNull()
-    })
-  })
 })
